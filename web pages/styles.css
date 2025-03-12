@@ -205,10 +205,12 @@ canvas {
     background-color: var(--error-color);
 }
 
+/* Add this rule to change the role text color in dark mode */
 .dark-mode #user-role {
-    color: var(--gold-color);
+    color: var(--gold-color); /* Gold color for better visibility in dark mode */
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -223,4 +225,29 @@ canvas {
     header h1 {
         margin-bottom: 1rem;
     }
+    .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    10%, 90% { opacity: 1; }
+}
+
+.notification.success {
+    background-color: #4CAF50; /* Green */
+}
+
+.notification.error {
+    background-color: #f44336; /* Red */
+}
 }

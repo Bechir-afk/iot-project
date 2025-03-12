@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hacker Login Form</title>
+  <link rel="stylesheet" href="./style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <section>
+    <!-- Background spans -->
+    <span></span>
+    <span></span>
+    <span></span>
+    <!-- Add more spans as needed -->
+
+    <div class="signin">
+      <div class="content">
+        <h2>Sign In</h2>
+        <div class="form">
+          <div class="inputBox">
+            <input type="text" id="login-username" required>
+            <i>Username</i>
+          </div>
+          <div class="inputBox">
+            <input type="password" id="login-password" required>
+            <i>Password</i>
+          </div>
+          <div class="links">
+            <a href="#" id="forgot-password">Forgot Password</a>
+            <a href="signup.html">Signup</a> <!-- Link to the signup page -->
+          </div>
+          <div class="inputBox">
+            <input type="submit" value="Login" id="login-btn">
+          </div>
+          <!-- Dark Mode Toggle Button -->
+          <button id="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+            <span id="dark-mode-text">Toggle Dark Mode</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script src="./script.js"></script>
+</body>
+</html>

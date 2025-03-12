@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management System</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1 id="header-title">Attendance Management System</h1>
+            <div>
+                <span id="user-role" style="color: yellow; margin-right: 10px;">Role: Student</span>
+                <!-- Dark Mode Toggle Button -->
+                <button id="dark-mode-toggle" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                    <span id="dark-mode-text">Toggle Dark Mode</span>
+                </button>
+                <button id="logout-btn" class="hidden" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span id="logout-text">Logout</span>
+                </button>
+                <a href="profile.html">
+                    <button id="profile-btn">
+                        <i class="fas fa-user"></i>
+                        <span id="profile-text">Profile</span>
+                    </button>
+                </a>
+            </div>
+        </header>
+        <main>
+            <div class="container" id="auth-container">
+                <h2 id="auth-title">Login / Signup</h2>
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <button id="toggle-password" onclick="togglePasswordVisibility()">
+                    <i class="fas fa-eye"></i>
+                    <span id="toggle-password-text">Show/Hide Password</span>
+                </button>
+                <button id="login-btn" onclick="login()">
+                    <span id="login-text">Login</span>
+                </button>
+                <button id="signup-btn" onclick="signup()">
+                    <span id="signup-text">Signup</span>
+                </button>
+                <label>
+                    <input type="checkbox" id="remember-me">
+                    <span id="remember-me-text">Remember Me</span>
+                </label>
+                <button id="reset-password-btn" onclick="resetPassword()">
+                    <i class="fas fa-key"></i>
+                    <span id="reset-password-text">Forgot Password</span>
+                </button>
+                <div id="auth-notification" class="notification hidden"></div>
+                <select id="language-selector" class="language-selector" onchange="updateLanguage()">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+            <div class="container hidden" id="attendance-container">
+                <h2 id="attendance-title">Attendance Records</h2>
+                <input type="text" id="user-id" placeholder="User ID">
+                <input type="text" id="filter-user-id" placeholder="Filter by User ID">
+                <button id="filter-user-id-btn" onclick="filterByUserId()">Filter</button>
+                <input type="date" id="filter-date">
+                <button id="clock-in-btn" onclick="clockIn()">
+                    <span id="clock-in-text">Clock In</span>
+                </button>
+                <button id="clock-out-btn" onclick="clockOut()">
+                    <span id="clock-out-text">Clock Out</span>
+                </button>
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th id="user-id-header">User ID</th>
+                            <th id="time-in-header">Time In</th>
+                            <th id="time-out-header">Time Out</th>
+                            <th id="actions-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button id="reset-btn" onclick="resetFilters()">
+                    <span id="reset-text">Reset Filters</span>
+                </button>
+                <button id="export-btn" class="hidden" onclick="exportToExcel()">
+                    <span id="export-text">Export Excel</span>
+                </button>
+                <div id="attendance-notification" class="notification hidden"></div>
+            </div>
+            <div class="container hidden" id="admin-dashboard">
+                <div class="dashboard">
+                    <h2 id="admin-title">Admin Dashboard</h2>
+                    <canvas id="attendance-chart" class="chart"></canvas>
+                </div>
+            </div>
+            <div id="loading-spinner" class="loading-spinner hidden"></div>
+        </main>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="./test.js"></script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management System</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Link to external torch CSS file -->
+    <link rel="stylesheet" href="https://public.codepenassets.com/css/normalize-5.0.0.min.css">
+<link rel="stylesheet" href="./torch.css">
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Link to external JavaScript libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1 id="header-title">Attendance Management System</h1>
+            <div>
+                <span id="user-role" style="color: yellow; margin-right: 10px;">Role: Student</span>
+                <!-- partial:index.partial.html -->
+<svg class="toggle-scene" xmlns="http://www.w3.org/2000/svg"  preserveaspectratio="xMinYMin" viewBox="0 0 197.451 481.081">
+    <defs>
+      <marker id="e" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="d" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="c" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="b" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="a" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <clippath id="g" clippathunits="userSpaceOnUse">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      </clippath>
+      <clippath id="f" clippathunits="userSpaceOnUse">
+        <path d="M-868.418 945.051c-4.188 73.011 78.255 53.244 150.216 52.941 82.387-.346 98.921-19.444 98.921-47.058 0-27.615-4.788-42.55-73.823-42.55-69.036 0-171.436-30.937-175.314 36.667z"></path>
+      </clippath>
+    </defs>
+    <g class="toggle-scene__cords">
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.56v150.493" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.59s28 8.131 28 19.506-18.667 13.005-28 19.507c-9.333 6.502-28 8.131-28 19.506s28 19.507 28 19.507" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.575s-20 16.871-20 28.468c0 11.597 13.333 18.978 20 28.468 6.667 9.489 20 16.87 20 28.467 0 11.597-20 28.468-20 28.468" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.569s16 20.623 16 32.782c0 12.16-10.667 21.855-16 32.782-5.333 10.928-16 20.623-16 32.782 0 12.16 16 32.782 16 32.782" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.563s-10 24.647-10 37.623c0 12.977 6.667 25.082 10 37.623 3.333 12.541 10 24.647 10 37.623 0 12.977-10 37.623-10 37.623" transform="translate(-24.503 256.106)"></path>
+      <g class="line toggle-scene__dummy-cord">
+        <line marker-end="url(#a)" x1="98.7255" x2="98.7255" y1="240.5405" y2="380.5405"></line>
+      </g>
+      <circle class="toggle-scene__hit-spot" cx="98.7255" cy="380.5405" r="60" fill="transparent"></circle>
+    </g>
+    <g class="toggle-scene__bulb bulb" transform="translate(844.069 -645.213)">
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      <path class="bulb__cap-shine" d="M-778.379 802.873h25.512v118.409h-25.512z" clip-path="url(#g)" transform="matrix(.52452 0 0 .90177 -368.282 82.976)"></path>
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v0s-8.439 10.115-28.817 10.115c-21.673 0-29.59-10.115-29.59-10.115z"></path>
+      <path class="bulb__cap-outline" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      <g class="bulb__filament" fill="none" stroke-linecap="round" stroke-width="5">
+        <path d="M-752.914 823.875l-8.858-33.06"></path>
+        <path d="M-737.772 823.875l8.858-33.06"></path>
+      </g>
+      <path class="bulb__bulb" stroke-linecap="round" stroke-width="5" d="M-783.192 803.855c5.251 8.815 5.295 21.32 13.272 27.774 12.299 8.045 36.46 8.115 49.127 0 7.976-6.454 8.022-18.96 13.273-27.774 3.992-6.7 14.408-19.811 14.408-19.811 8.276-11.539 12.769-24.594 12.769-38.699 0-35.898-29.102-65-65-65-35.899 0-65 29.102-65 65 0 13.667 4.217 26.348 12.405 38.2 0 0 10.754 13.61 14.746 20.31z"></path>
+      <circle class="bulb__flash" cx="-745.343" cy="743.939" r="83.725" fill="none" stroke-dasharray="10,30" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"></circle>
+      <path class="bulb__shine" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M-789.19 757.501a45.897 45.897 0 013.915-36.189 45.897 45.897 0 0129.031-21.957"></path>
+    </g>
+  </svg>
+  <!-- partial -->
+    <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+  <script src='https://assets.codepen.io/16327/MorphSVGPlugin3.min.js'></script>
+  <script src='https://unpkg.com/gsap@3/dist/Draggable.min.js'></script><script  src="./torch.js"></script>
+                <!--<button id="dark-mode-toggle"><i class="fas fa-moon"></i> <span id="dark-mode-text">Toggle Dark Mode</span></button>-->
+                <button id="logout-btn" class="hidden"><i class="fas fa-sign-out-alt"></i> <span id="logout-text">Logout</span></button>
+                <a href="profile.html"><button id="profile-btn"><i class="fas fa-user"></i> <span id="profile-text">Profile</span></button></a>
+            </div>
+        </header>
+        <main>
+            <div class="container" id="auth-container">
+                <h2 id="auth-title">Login / Signup</h2>
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <button id="toggle-password"><i class="fas fa-eye"></i> <span id="toggle-password-text">Show/Hide Password</span></button>
+                <button id="login-btn"><span id="login-text">Login</span></button>
+                <button id="signup-btn"><span id="signup-text">Signup</span></button>
+                <label>
+                    <input type="checkbox" id="remember-me"> <span id="remember-me-text">Remember Me</span>
+                </label>
+                <button id="reset-password-btn"><i class="fas fa-key"></i> <span id="reset-password-text">Forgot Password</span></button>
+                <div id="auth-notification" class="notification hidden"></div>
+                <select id="language-selector" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+            <div class="container hidden" id="attendance-container">
+                <h2 id="attendance-title">Attendance Records</h2>
+                <input type="text" id="user-id" placeholder="User ID">
+                <!-- Filtering inputs and button -->
+                <input type="text" id="filter-user-id" placeholder="Filter by User ID">
+                <button id="filter-user-id-btn">Filter</button>
+                <input type="date" id="filter-date">
+                <button id="clock-in-btn"><span id="clock-in-text">Clock In</span></button>
+                <button id="clock-out-btn"><span id="clock-out-text">Clock Out</span></button>
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th id="user-id-header">User ID</th>
+                            <th id="time-in-header">Time In</th>
+                            <th id="time-out-header">Time Out</th>
+                            <th id="actions-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button id="reset-btn"><span id="reset-text">Reset Filters</span></button>
+                <button id="export-btn" class="hidden"><span id="export-text">Export Excel</span></button>
+                <div id="attendance-notification" class="notification hidden"></div>
+            </div>
+            <div class="container hidden" id="admin-dashboard">
+                <div class="dashboard">
+                    <h2 id="admin-title">Admin Dashboard</h2>
+                    <canvas id="attendance-chart" class="chart"></canvas>
+                </div>
+            </div>
+            <div id="loading-spinner" class="loading-spinner hidden"></div>
+        </main>
+    </div>
+
+    <!-- Embedded JavaScript -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, orderBy, where, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo",
+            authDomain: "fdhf-4403b.firebaseapp.com",
+            databaseURL: "https://fdhf-4403b-default-rtdb.firebaseio.com",
+            projectId: "fdhf-4403b",
+            storageBucket: "fdhf-4403b.appspot.com",
+            messagingSenderId: "805654928789",
+            appId: "1:805654928789:web:c7d541db0c1f92196e2a9c",
+            measurementId: "G-KZNZ6JQ4FL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const analytics = getAnalytics(app);
+
+        console.log("Firebase initialized:", app);
+
+        // Language translations
+        const translations = {
+            en: {
+                headerTitle: "Attendance Management System",
+                darkModeText: "Toggle Dark Mode",
+                logoutText: "Logout",
+                authTitle: "Login / Signup",
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                togglePasswordText: "Show/Hide Password",
+                loginText: "Login",
+                signupText: "Signup",
+                rememberMeText: "Remember Me",
+                resetPasswordText: "Forgot Password",
+                updateProfileText: "Update Profile",
+                attendanceTitle: "Attendance Records",
+                userIDPlaceholder: "User ID",
+                clockInText: "Clock In",
+                clockOutText: "Clock Out",
+                userIDHeader: "User ID",
+                timeInHeader: "Time In",
+                timeOutHeader: "Time Out",
+                actionsHeader: "Actions",
+                resetText: "Reset Filters",
+                exportText: "Export Excel",
+                adminTitle: "Admin Dashboard",
+                welcomeAdmin: "Welcome Admin",
+                welcomeStudent: "Welcome Student",
+                roleAdmin: "Role: Admin",
+                roleStudent: "Role: Student",
+            },
+            es: {
+                headerTitle: "Sistema de Gestión de Asistencia",
+                darkModeText: "Alternar Modo Oscuro",
+                logoutText: "Cerrar Sesión",
+                authTitle: "Iniciar Sesión / Registrarse",
+                emailPlaceholder: "Correo Electrónico",
+                passwordPlaceholder: "Contraseña",
+                togglePasswordText: "Mostrar/Ocultar Contraseña",
+                loginText: "Iniciar Sesión",
+                signupText: "Registrarse",
+                rememberMeText: "Recuérdame",
+                resetPasswordText: "Olvidé mi Contraseña",
+                updateProfileText: "Actualizar Perfil",
+                attendanceTitle: "Registros de Asistencia",
+                userIDPlaceholder: "ID de Usuario",
+                clockInText: "Registrar Entrada",
+                clockOutText: "Registrar Salida",
+                userIDHeader: "ID de Usuario",
+                timeInHeader: "Hora de Entrada",
+                timeOutHeader: "Hora de Salida",
+                actionsHeader: "Acciones",
+                resetText: "Restablecer Filtros",
+                exportText: "Exportar CSV",
+                adminTitle: "Panel de Administración",
+                welcomeAdmin: "Bienvenido Administrador",
+                welcomeStudent: "Bienvenido Estudiante",
+                roleAdmin: "Rol: Administrador",
+                roleStudent: "Rol: Estudiante",
+            },
+            ar: {
+                headerTitle: "نظام إدارة الحضور",
+                darkModeText: "تبديل الوضع الليلي",
+                logoutText: "تسجيل الخروج",
+                authTitle: "تسجيل الدخول / التسجيل",
+                emailPlaceholder: "البريد الإلكتروني",
+                passwordPlaceholder: "كلمة المرور",
+                togglePasswordText: "إظهار/إخفاء كلمة المرور",
+                loginText: "تسجيل الدخول",
+                signupText: "التسجيل",
+                rememberMeText: "تذكرني",
+                resetPasswordText: "نسيت كلمة المرور",
+                updateProfileText: "تحديث الملف الشخصي",
+                attendanceTitle: "سجلات الحضور",
+                userIDPlaceholder: "معرف المستخدم",
+                clockInText: "تسجيل الدخول",
+                clockOutText: "تسجيل الخروج",
+                userIDHeader: "معرف المستخدم",
+                timeInHeader: "وقت الدخول",
+                timeOutHeader: "وقت الخروج",
+                actionsHeader: "الإجراءات",
+                resetText: "إعادة تعيين الفلاتر",
+                exportText: "تصدير CSV",
+                adminTitle: "لوحة الإدارة",
+                welcomeAdmin: "مرحبًا بك يا مدير",
+                welcomeStudent: "مرحبًا بك يا طالب",
+                roleAdmin: "الدور: مدير",
+                roleStudent: "الدور: طالب",
+            },
+        };
+
+        // Set default language to English
+        let currentLanguage = "en";
+
+        // Function to update the UI with the selected language
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            const translation = translations[lang];
+            document.getElementById("header-title").textContent = translation.headerTitle;
+            document.getElementById("dark-mode-text").textContent = translation.darkModeText;
+            document.getElementById("logout-text").textContent = translation.logoutText;
+            document.getElementById("auth-title").textContent = translation.authTitle;
+            document.getElementById("email").placeholder = translation.emailPlaceholder;
+            document.getElementById("password").placeholder = translation.passwordPlaceholder;
+            document.getElementById("toggle-password-text").textContent = translation.togglePasswordText;
+            document.getElementById("login-text").textContent = translation.loginText;
+            document.getElementById("signup-text").textContent = translation.signupText;
+            document.getElementById("remember-me-text").textContent = translation.rememberMeText;
+            document.getElementById("reset-password-text").textContent = translation.resetPasswordText;
+            document.getElementById("attendance-title").textContent = translation.attendanceTitle;
+            document.getElementById("user-id").placeholder = translation.userIDPlaceholder;
+            document.getElementById("clock-in-text").textContent = translation.clockInText;
+            document.getElementById("clock-out-text").textContent = translation.clockOutText;
+            document.getElementById("user-id-header").textContent = translation.userIDHeader;
+            document.getElementById("time-in-header").textContent = translation.timeInHeader;
+            document.getElementById("time-out-header").textContent = translation.timeOutHeader;
+            document.getElementById("actions-header").textContent = translation.actionsHeader;
+            document.getElementById("reset-text").textContent = translation.resetText;
+            document.getElementById("export-text").textContent = translation.exportText;
+            document.getElementById("admin-title").textContent = translation.adminTitle;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded and parsed");
+
+            const authContainer = document.getElementById('auth-container');
+            const attendanceContainer = document.getElementById('attendance-container');
+            const adminDashboard = document.getElementById('admin-dashboard');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('login-btn');
+            const signupBtn = document.getElementById('signup-btn');
+            const userIdInput = document.getElementById('user-id');
+            const filterUserIdInput = document.getElementById('filter-user-id');
+            const filterDateInput = document.getElementById('filter-date');
+            const clockInBtn = document.getElementById('clock-in-btn');
+            const clockOutBtn = document.getElementById('clock-out-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const attendanceTableBody = document.querySelector('#attendance-table tbody');
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const rememberMeCheckbox = document.getElementById('remember-me');
+            const resetPasswordBtn = document.getElementById('reset-password-btn');
+            const authNotification = document.getElementById('auth-notification');
+            const attendanceNotification = document.getElementById('attendance-notification');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const tableHeaders = document.querySelectorAll('#attendance-table th');
+            const languageSelector = document.getElementById('language-selector');
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-name');
+            const userRole = document.getElementById('user-role');
+            const profileNameInput = document.getElementById('profile-name');
+            const profileEmailInput = document.getElementById('profile-email');
+            const updateProfileBtn = document.getElementById('update-profile-btn');
+            const avatarUpload = document.getElementById('avatar-upload');
+            const attendanceChart = document.getElementById('attendance-chart').getContext('2d');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            let currentUser = null;
+            let sortField = 'timestampIn';
+            let sortDirection = 'asc';
+            let filterDate = null;
+            let filterUserId = null;
+            let isAdmin = false;
+
+            // Set default language
+            updateLanguage(currentLanguage);
+
+            // Language selector event listener
+            languageSelector.addEventListener('change', (event) => {
+                const selectedLanguage = event.target.value;
+                updateLanguage(selectedLanguage);
+            });
+
+            // Toggle Password Visibility
+            togglePasswordBtn.addEventListener('click', () => {
+                console.log("Toggle password visibility");
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            });
+
+            // Dark Mode Toggle
+            darkModeToggle.addEventListener('click', () => {
+                console.log("Toggle dark mode");
+                document.body.classList.toggle('dark-mode');
+                document.querySelectorAll('input, button, th, td, .container, header, .notification').forEach(el => {
+                    el.classList.toggle('dark-mode');
+                });
+                darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i> ' + translations[currentLanguage].darkModeText : '<i class="fas fa-moon"></i> ' + translations[currentLanguage].darkModeText;
+            });
+
+            // Show Loading Spinner
+            function showLoadingSpinner() {
+                loadingSpinner.classList.remove('hidden');
+            }
+
+            // Hide Loading Spinner
+            function hideLoadingSpinner() {
+                loadingSpinner.classList.add('hidden');
+            }
+
+            // Show Notification
+            function showNotification(element, message, type) {
+                element.textContent = message;
+                element.classList.remove('hidden', 'success', 'error');
+                element.classList.add(type);
+                setTimeout(() => {
+                    element.classList.add('fade-out');
+                    setTimeout(() => {
+                        element.classList.add('hidden');
+                        element.classList.remove('fade-out');
+                    }, 300);
+                }, 3000);
+            }
+
+            // Validate Email
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            // Validate Password
+            function isValidPassword(password) {
+                return password.length >= 6;
+            }
+
+            // Login
+            loginBtn.addEventListener('click', async () => {
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!isValidEmail(email)) {
+                    showNotification(authNotification, translations[currentLanguage].emailError || 'Please enter a valid email address', 'error');
+                    return;
+                }
+
+                if (!isValidPassword(password)) {
+                    showNotification(authNotification, translations[currentLanguage].passwordError || 'Password must be at least 6 characters long', 'error');
+                    return;
+                }
+
+                try {
+                    showLoadingSpinner();
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    currentUser = userCredential.user;
+                    checkAdmin(currentUser.email);
+                    showNotification(authNotification, translations[currentLanguage].loginSuccess || 'Login successful!', 'success');
+                } catch (error) {
+                    showNotification(authNotification, error.message, 'error');
+                } finally {
+                    hideLoadingSpinner();
+                }
+            });
+
+            // Signup
+            signupBtn.addEventListener('click', async () => {
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!isValidEmail(email)) {
+                    showNotification(authNotification, translations[currentLanguage].emailError || 'Please enter a valid email address', 'error');
+                    return;
+                }
+
+                if (!isValidPassword(password)) {
+                    showNotification(authNotification, translations[currentLanguage].passwordError || 'Password must be at least 6 characters long', 'error');
+                    return;
+                }
+
+                try {
+                    showLoadingSpinner();
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    currentUser = userCredential.user;
+                    if (rememberMeCheckbox.checked) {
+                        await setPersistence(auth, browserLocalPersistence);
+                    } else {
+                        await setPersistence(auth, browserSessionPersistence);
+                    }
+                    await sendEmailVerification(currentUser);
+
+                    // Check if this is the first user (admin)
+                    const usersSnapshot = await getDocs(query(collection(db, 'users'), orderBy('createdAt')));
+                    if (usersSnapshot.empty) {
+                        // First user is the admin
+                        await setDoc(doc(db, 'users', currentUser.uid), {
+                            email: email,
+                            role: 'admin',
+                            createdAt: serverTimestamp()
+                        });
+                        isAdmin = true;
+                    } else {
+                        // Subsequent users are students
+                        await setDoc(doc(db, 'users', currentUser.uid), {
+                            email: email,
+                            role: 'student',
+                            createdAt: serverTimestamp()
+                        });
+                        isAdmin = false;
+                    }
+
+                    showNotification(authNotification, translations[currentLanguage].signupSuccess || 'Signup successful! Please verify your email.', 'success');
+                } catch (error) {
+                    showNotification(authNotification, error.message, 'error');
+                } finally {
+                    hideLoadingSpinner();
+                }
+            });
+
+            // Reset Password
+            resetPasswordBtn.addEventListener('click', async () => {
+                const email = emailInput.value.trim();
+
+                if (!isValidEmail(email)) {
+                    showNotification(authNotification, translations[currentLanguage].emailError || 'Please enter a valid email address', 'error');
+                    return;
+                }
+
+                try {
+                    showLoadingSpinner();
+                    await sendPasswordResetEmail(auth, email);
+                    showNotification(authNotification, translations[currentLanguage].resetPasswordSuccess || 'Password reset email sent!', 'success');
+                } catch (error) {
+                    showNotification(authNotification, error.message, 'error');
+                } finally {
+                    hideLoadingSpinner();
+                }
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    showLoadingSpinner();
+                    await signOut(auth);
+                    showNotification(authNotification, translations[currentLanguage].logoutSuccess || 'Logged out successfully!', 'success');
+                    authContainer.classList.remove('hidden');
+                    attendanceContainer.classList.add('hidden');
+                    adminDashboard.classList.add('hidden');
+                    logoutBtn.classList.add('hidden');
+                } catch (error) {
+                    showNotification(authNotification, error.message, 'error');
+                } finally {
+                    hideLoadingSpinner();
+                }
+            });
+
+            // Check if the user is an admin
+            async function checkAdmin(email) {
+                const usersSnapshot = await getDocs(query(collection(db, 'users'), orderBy('createdAt')));
+                if (!usersSnapshot.empty) {
+                    const firstUser = usersSnapshot.docs[0].data();
+                    if (firstUser.email === email) {
+                        isAdmin = true;
+                        userRole.textContent = translations[currentLanguage].roleAdmin || 'Role: Admin';
+                        showNotification(authNotification, translations[currentLanguage].welcomeAdmin || 'Welcome Admin', 'success');
+                        showAdminFeatures();
+                    } else {
+                        isAdmin = false;
+                        userRole.textContent = translations[currentLanguage].roleStudent || 'Role: Student';
+                        showNotification(authNotification, translations[currentLanguage].welcomeStudent || 'Welcome Student', 'success');
+                        showStudentFeatures();
+                    }
+                }
+            }
+
+            // Show Admin Features
+            function showAdminFeatures() {
+                authContainer.classList.add('hidden');
+                attendanceContainer.classList.remove('hidden');
+                adminDashboard.classList.remove('hidden');
+                exportBtn.classList.remove('hidden');
+                loadAttendanceRecords();
+                loadAttendanceChart();
+            }
+
+            // Show Student Features
+            function showStudentFeatures() {
+                authContainer.classList.add('hidden');
+                attendanceContainer.classList.remove('hidden');
+                adminDashboard.classList.add('hidden');
+                exportBtn.classList.add('hidden');
+                loadAttendanceRecords();
+            }
+
+            // Load Attendance Records with Client-Side Sorting
+            async function loadAttendanceRecords() {
+                const user = auth.currentUser;
+                if (user) {
+                    try {
+                        showLoadingSpinner();
+                        const q = query(collection(db, 'attendance'));
+                        const querySnapshot = await getDocs(q);
+                        let records = [];
+                        querySnapshot.forEach(doc => {
+                            const data = doc.data();
+                            records.push({
+                                id: doc.id,
+                                userId: data.userId,
+                                timestampIn: data.timestampIn ? new Date(data.timestampIn.seconds * 1000) : null,
+                                timestampOut: data.timestampOut ? new Date(data.timestampOut.seconds * 1000) : null,
+                                date: data.date
+                            });
+                        });
+
+                        // Apply filters
+                        if (filterDate) {
+                            records = records.filter(record => record.date === filterDate);
+                        }
+                        if (filterUserId) {
+                            records = records.filter(record => record.userId === filterUserId);
+                        }
+
+                        // Apply sorting
+                        records.sort((a, b) => {
+                            if (sortDirection === 'asc') {
+                                return a[sortField] - b[sortField];
+                            } else {
+                                return b[sortField] - a[sortField];
+                            }
+                        });
+
+                        // Render records
+                        attendanceTableBody.innerHTML = '';
+                        records.forEach(record => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${record.userId}</td>
+                                <td>${record.timestampIn ? record.timestampIn.toLocaleString() : 'N/A'}</td>
+                                <td>${record.timestampOut ? record.timestampOut.toLocaleString() : 'N/A'}</td>
+                                <td>
+                                    ${isAdmin ? `<button onclick="deleteRecord('${record.id}')">${translations[currentLanguage].deleteText || 'Delete'}</button>` : ''}
+                                </td>
+                            `;
+                            attendanceTableBody.appendChild(row);
+                        });
+                    } catch (error) {
+                        showNotification(attendanceNotification, error.message, 'error');
+                    } finally {
+                        hideLoadingSpinner();
+                    }
+                }
+            }
+
+            // Delete Record
+            window.deleteRecord = async function (recordId) {
+                try {
+                    showLoadingSpinner();
+                    await deleteDoc(doc(db, 'attendance', recordId));
+                    showNotification(attendanceNotification, translations[currentLanguage].deleteSuccess || 'Record deleted successfully!', 'success');
+                    loadAttendanceRecords();
+                } catch (error) {
+                    showNotification(attendanceNotification, error.message, 'error');
+                } finally {
+                    hideLoadingSpinner();
+                }
+            };
+
+            // Clock In
+            clockInBtn.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                const userId = userIdInput.value.trim();
+                if (user) {
+                    try {
+                        showLoadingSpinner();
+                        const docRef = doc(db, 'attendance', userId);
+                        await setDoc(docRef, {
+                            userId: userId,
+                            timestampIn: serverTimestamp(),
+                            timestampOut: null,
+                            date: new Date().toISOString().split('T')[0]
+                        }, { merge: true });
+                        showNotification(attendanceNotification, translations[currentLanguage].clockInSuccess || 'Clocked in successfully!', 'success');
+                        loadAttendanceRecords();
+                    } catch (error) {
+                        showNotification(attendanceNotification, error.message, 'error');
+                    } finally {
+                        hideLoadingSpinner();
+                    }
+                }
+            });
+
+            // Clock Out
+            clockOutBtn.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                const userId = userIdInput.value.trim();
+                if (user) {
+                    try {
+                        showLoadingSpinner();
+                        const docRef = doc(db, 'attendance', userId);
+                        await updateDoc(docRef, {
+                            timestampOut: serverTimestamp()
+                        });
+                        showNotification(attendanceNotification, translations[currentLanguage].clockOutSuccess || 'Clocked out successfully!', 'success');
+                        loadAttendanceRecords();
+                    } catch (error) {
+                        showNotification(attendanceNotification, error.message, 'error');
+                    } finally {
+                        hideLoadingSpinner();
+                    }
+                }
+            });
+
+            // Reset Filters
+            resetBtn.addEventListener('click', () => {
+                filterDateInput.value = '';
+                filterUserIdInput.value = '';
+                filterDate = null;
+                filterUserId = null;
+                loadAttendanceRecords();
+            });
+
+            // Export Excel
+            exportBtn.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                if (user) {
+                    try {
+                        showLoadingSpinner();
+                        const q = query(collection(db, 'attendance'), orderBy(sortField, sortDirection));
+                        const querySnapshot = await getDocs(q);
+                        const data = [];
+                        querySnapshot.forEach(doc => {
+                            const record = doc.data();
+                            data.push({
+                                'User ID': record.userId,
+                                'Time In': record.timestampIn ? new Date(record.timestampIn.seconds * 1000).toLocaleString() : 'N/A',
+                                'Time Out': record.timestampOut ? new Date(record.timestampOut.seconds * 1000).toLocaleString() : 'N/A',
+                            });
+                        });
+
+                        const worksheet = XLSX.utils.json_to_sheet(data);
+                        const workbook = XLSX.utils.book_new();
+                        XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance Records');
+                        XLSX.writeFile(workbook, 'attendance_records.xlsx');
+                        showNotification(attendanceNotification, translations[currentLanguage].exportSuccess || 'Excel exported successfully!', 'success');
+                    } catch (error) {
+                        showNotification(attendanceNotification, error.message, 'error');
+                    } finally {
+                        hideLoadingSpinner();
+                    }
+                }
+            });
+
+            // Load Attendance Chart
+            async function loadAttendanceChart() {
+                const user = auth.currentUser;
+                if (user) {
+                    try {
+                        showLoadingSpinner();
+                        const q = query(collection(db, 'attendance'), orderBy('timestampIn', 'asc'));
+                        const querySnapshot = await getDocs(q);
+                        const attendanceData = {
+                            Monday: 0,
+                            Tuesday: 0,
+                            Wednesday: 0,
+                            Thursday: 0,
+                            Friday: 0,
+                            Saturday: 0,
+                            Sunday: 0
+                        };
+
+                        querySnapshot.forEach(doc => {
+                            const data = doc.data();
+                            const day = new Date(data.timestampIn.seconds * 1000).toLocaleString('en-US', { weekday: 'long' });
+                            attendanceData[day]++;
+                        });
+
+                        const chart = new Chart(attendanceChart, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                                datasets: [{
+                                    label: 'Attendance',
+                                    data: [
+                                        attendanceData.Monday,
+                                        attendanceData.Tuesday,
+                                        attendanceData.Wednesday,
+                                        attendanceData.Thursday,
+                                        attendanceData.Friday,
+                                        attendanceData.Saturday,
+                                        attendanceData.Sunday
+                                    ],
+                                    backgroundColor: 'rgba(98, 0, 234, 0.2)',
+                                    borderColor: 'rgba(98, 0, 234, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    } catch (error) {
+                        showNotification(attendanceNotification, error.message, 'error');
+                    } finally {
+                        hideLoadingSpinner();
+                    }
+                }
+            }
+
+            // Initialize
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    checkAdmin(user.email);
+                    logoutBtn.classList.remove('hidden');
+                } else {
+                    authContainer.classList.remove('hidden');
+                    attendanceContainer.classList.add('hidden');
+                    adminDashboard.classList.add('hidden');
+                    logoutBtn.classList.add('hidden');
+                }
+            });
+
+            // Filter by User ID
+            filterUserIdInput.addEventListener('input', () => {
+                filterUserId = filterUserIdInput.value.trim();
+                loadAttendanceRecords();
+            });
+
+            // Filter by Date
+            filterDateInput.addEventListener('change', () => {
+                filterDate = filterDateInput.value;
+                loadAttendanceRecords();
+            });
+
+            // Add event listener for the filter button
+            const filterUserIdBtn = document.getElementById('filter-user-id-btn');
+            filterUserIdBtn.addEventListener('click', () => {
+                filterUserId = filterUserIdInput.value.trim();
+                loadAttendanceRecords();
+            });
+        });
+    </script>
+</body>
+</html>
