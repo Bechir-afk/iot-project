@@ -136,7 +136,7 @@ section span:hover {
 .signin .content .form .inputBox input:valid ~ i,
 .signup .content .form .inputBox input:focus ~ i,
 .signup .content .form .inputBox input:valid ~ i {
-  transform: translateY(-7.5px);
+  transform: translateY(-35px);
   font-size: 0.8em;
   color: #ffffff;
 }
