@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>User Dashboard</title>
+  <title>User Profile</title>
   <link rel="stylesheet" href="./style.css">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="fst.png">
@@ -49,6 +49,17 @@
 
   <!-- Main Content -->
   <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Welcome Banner -->
+    <div id="welcome-banner" class="hidden bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 mx-4 mt-4 rounded shadow-md" role="alert">
+      <div class="flex">
+        <div class="py-1"><svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+        <div>
+          <p class="font-bold" id="welcome-message">Login Successful!</p>
+          <p class="text-sm" id="login-timestamp"></p>
+        </div>
+      </div>
+    </div>
+
     <!-- Time Card -->
     <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
       <div class="px-4 py-5 sm:px-6">
@@ -438,6 +449,37 @@
     function formatDate(date) {
       return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
     }
+
+    // Check for login success message
+    document.addEventListener('DOMContentLoaded', function() {
+      if (sessionStorage.getItem('loginSuccess') === 'true') {
+        const welcomeBanner = document.getElementById('welcome-banner');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const loginTimestamp = document.getElementById('login-timestamp');
+        
+        // Get login email and time
+        const email = sessionStorage.getItem('loginEmail');
+        const loginTime = new Date(sessionStorage.getItem('loginTime'));
+        
+        // Update message
+        welcomeMessage.textContent = `Welcome back, ${email}!`;
+        loginTimestamp.textContent = `Logged in at ${loginTime.toLocaleTimeString()}`;
+        
+        // Show banner
+        welcomeBanner.classList.remove('hidden');
+        
+        // Clear the flag to prevent showing on refresh
+        sessionStorage.removeItem('loginSuccess');
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          welcomeBanner.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+          setTimeout(() => {
+            welcomeBanner.classList.add('hidden');
+          }, 1000);
+        }, 5000);
+      }
+    });
   </script>
 </body>
 </html>

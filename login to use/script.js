@@ -64,14 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          showNotification("Login successful!", "success");
+          showNotification(`Welcome back, ${user.email}!`, "success");
+          
+          // Store login success info for profile page to display
+          sessionStorage.setItem('loginSuccess', 'true');
+          sessionStorage.setItem('loginEmail', user.email);
+          sessionStorage.setItem('loginTime', new Date().toISOString());
+          
+          console.log("Redirecting to:", "profile.html");
+          // Give more time to see the success message
           setTimeout(() => {
-            try {
-              window.location = new URL("profile.html", window.location.href).href;
-            } catch(e) {
-              console.error("Navigation error:", e);
-              showNotification("Failed to navigate to profile page", "error");
-            }
+            window.location.href = "profile.html";
           }, 1500);
         })
         .catch((error) => {
