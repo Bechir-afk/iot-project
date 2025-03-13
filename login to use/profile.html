@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="fst.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <!-- Top Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <img class="h-8 w-auto" src="fst.png" alt="Logo">
+            <span class="ml-2 text-xl font-bold text-gray-800 dark:text-white">User Dashboard</span>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="relative ml-3">
+            <div>
+              <button id="user-menu-btn" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <span class="sr-only">Open user menu</span>
+                <img id="user-avatar" class="h-8 w-8 rounded-full object-cover" src="fst.png" alt="User avatar">
+              </button>
+            </div>
+            <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+              <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                <p id="menu-user-name" class="text-sm font-medium text-gray-900 dark:text-white">User Name</p>
+                <p id="menu-user-email" class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
+                <span id="menu-user-role" class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Student</span>
+              </div>
+              <a href="#" id="menu-profile" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
+              <a href="#" id="menu-settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Time Card -->
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Time Tracking</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Today's attendance details</p>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Time In</p>
+              <p id="time-in" class="text-lg font-semibold text-gray-900 dark:text-white">Loading...</p>
+              <p id="time-in-date" class="text-xs text-gray-500 dark:text-gray-400">Loading...</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Time Out</p>
+              <p id="time-out" class="text-lg font-semibold text-gray-900 dark:text-white">Not logged out yet</p>
+              <p id="time-out-date" class="text-xs text-gray-500 dark:text-gray-400">-</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6">
+          <button id="log-time-btn" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Log Time Out
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Recent Login Activity</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Your login history</p>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time In</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time Out</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Duration</th>
+              </tr>
+            </thead>
+            <tbody id="login-history" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400" colspan="4">Loading login history...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Time Distribution Chart -->
+    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Weekly Time Distribution</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Hours logged per day this week</p>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+        <canvas id="timeChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo",
+      authDomain: "fdhf-4403b.firebaseapp.com",
+      databaseURL: "https://fdhf-4403b-default-rtdb.firebaseio.com",
+      projectId: "fdhf-4403b",
+      storageBucket: "fdhf-4403b.appspot.com",
+      messagingSenderId: "805654928789",
+      appId: "1:805654928789:web:c7d541db0c1f92196e2a9c",
+      measurementId: "G-KZNZ6JQ4FL"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // Check authentication state
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in
+        console.log("User is signed in:", user.email);
+        document.getElementById('menu-user-name').textContent = user.displayName || 'User';
+        document.getElementById('menu-user-email').textContent = user.email;
+        
+        // Load user data and time tracking info
+        loadUserData(user.uid);
+        loadLoginHistory(user.uid);
+        initializeChart();
+      } else {
+        // User is signed out, redirect to login page
+        window.location.href = 'index.html';
+      }
+    });
+
+    // Toggle dropdown menu
+    document.getElementById('user-menu-btn').addEventListener('click', function() {
+      document.getElementById('user-menu-dropdown').classList.toggle('hidden');
+    });
+
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      // Record logout time
+      const user = auth.currentUser;
+      if (user) {
+        recordLogoutTime(user.uid).then(() => {
+          // Sign out and redirect
+          auth.signOut().then(() => {
+            window.location.href = 'index.html';
+          });
+        });
+      }
+    });
+
+    // Log time button functionality
+    document.getElementById('log-time-btn').addEventListener('click', function() {
+      const user = auth.currentUser;
+      const button = this;
+      if (user) {
+        if (button.textContent === "Log Time Out") {
+          recordLogoutTime(user.uid).then(() => {
+            document.getElementById('time-out').textContent = formatTime(new Date());
+            document.getElementById('time-out-date').textContent = formatDate(new Date());
+            button.textContent = "Log Time In";
+            loadLoginHistory(user.uid); // Reload the history
+          });
+        } else {
+          recordLoginTime(user.uid).then(() => {
+            document.getElementById('time-in').textContent = formatTime(new Date());
+            document.getElementById('time-in-date').textContent = formatDate(new Date());
+            button.textContent = "Log Time Out";
+            loadLoginHistory(user.uid); // Reload the history
+          });
+        }
+      }
+    });
+
+    // Load user data and check if already logged in today
+    function loadUserData(userId) {
+      // Get the start of today
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      db.collection('timeTracking')
+        .where('userId', '==', userId)
+        .where('loginTime', '>=', today)
+        .orderBy('loginTime', 'desc')
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            // User has logged in today
+            const doc = querySnapshot.docs[0].data();
+            document.getElementById('time-in').textContent = formatTime(doc.loginTime.toDate());
+            document.getElementById('time-in-date').textContent = formatDate(doc.loginTime.toDate());
+            
+            if (doc.logoutTime) {
+              // User has also logged out
+              document.getElementById('time-out').textContent = formatTime(doc.logoutTime.toDate());
+              document.getElementById('time-out-date').textContent = formatDate(doc.logoutTime.toDate());
+              document.getElementById('log-time-btn').textContent = "Log Time In";
+            } else {
+              // User hasn't logged out yet
+              document.getElementById('log-time-btn').textContent = "Log Time Out";
+            }
+          } else {
+            // No login today, record initial login
+            recordLoginTime(userId).then(() => {
+              const now = new Date();
+              document.getElementById('time-in').textContent = formatTime(now);
+              document.getElementById('time-in-date').textContent = formatDate(now);
+              document.getElementById('log-time-btn').textContent = "Log Time Out";
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading user data:", error);
+        });
+    }
+
+    // Record login time
+    function recordLoginTime(userId) {
+      return db.collection('timeTracking').add({
+        userId: userId,
+        loginTime: firebase.firestore.FieldValue.serverTimestamp(),
+        logoutTime: null,
+        duration: 0
+      });
+    }
+
+    // Record logout time
+    function recordLogoutTime(userId) {
+      // Get the most recent login without a logout
+      return db.collection('timeTracking')
+        .where('userId', '==', userId)
+        .where('logoutTime', '==', null)
+        .orderBy('loginTime', 'desc')
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            const loginTime = doc.data().loginTime;
+            const logoutTime = firebase.firestore.FieldValue.serverTimestamp();
+            
+            // Calculate duration in minutes when the data is retrieved
+            return doc.ref.update({
+              logoutTime: logoutTime,
+              duration: firebase.firestore.FieldValue.increment(1) // This will be updated with the correct duration when retrieved
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error recording logout time:", error);
+        });
+    }
+
+    // Load login history
+    function loadLoginHistory(userId) {
+      // Get the last 7 days of login history
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      db.collection('timeTracking')
+        .where('userId', '==', userId)
+        .where('loginTime', '>=', sevenDaysAgo)
+        .orderBy('loginTime', 'desc')
+        .limit(10)
+        .get()
+        .then((querySnapshot) => {
+          const historyTable = document.getElementById('login-history');
+          
+          if (querySnapshot.empty) {
+            historyTable.innerHTML = `
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400" colspan="4">No login history found</td>
+              </tr>
+            `;
+            return;
+          }
+          
+          let tableContent = '';
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const loginDate = data.loginTime.toDate();
+            
+            // Format duration
+            let duration = 'Still logged in';
+            let logoutTime = 'Active';
+            
+            if (data.logoutTime) {
+              const logoutDate = data.logoutTime.toDate();
+              const durationMs = logoutDate - loginDate;
+              const durationMinutes = Math.floor(durationMs / (1000 * 60));
+              const hours = Math.floor(durationMinutes / 60);
+              const minutes = durationMinutes % 60;
+              
+              duration = `${hours}h ${minutes}m`;
+              logoutTime = formatTime(logoutDate);
+            }
+            
+            tableContent += `
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${formatDate(loginDate)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${formatTime(loginDate)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${logoutTime}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${duration}</td>
+              </tr>
+            `;
+          });
+          
+          historyTable.innerHTML = tableContent;
+        })
+        .catch((error) => {
+          console.error("Error loading login history:", error);
+        });
+    }
+
+    // Initialize chart
+    function initializeChart() {
+      const ctx = document.getElementById('timeChart').getContext('2d');
+      
+      // Get day labels for the last 7 days
+      const days = [];
+      const dayLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        days.push(dayLabels[date.getDay()]);
+      }
+      
+      // Sample data - in a real app, this would come from your database
+      const hours = [0, 0, 0, 0, 0, 0, 0];
+      
+      // Get the current user
+      const user = auth.currentUser;
+      if (user) {
+        // Calculate the date 7 days ago
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+        
+        // Query for time tracking records in the last 7 days
+        db.collection('timeTracking')
+          .where('userId', '==', user.uid)
+          .where('loginTime', '>=', sevenDaysAgo)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data.loginTime && data.logoutTime) {
+                const loginDate = data.loginTime.toDate();
+                const logoutDate = data.logoutTime.toDate();
+                const dayIndex = 6 - Math.floor((new Date() - loginDate) / (1000 * 60 * 60 * 24));
+                
+                if (dayIndex >= 0 && dayIndex < 7) {
+                  const durationHours = (logoutDate - loginDate) / (1000 * 60 * 60);
+                  hours[dayIndex] += durationHours;
+                }
+              }
+            });
+            
+            // Round hours to 2 decimal places
+            const roundedHours = hours.map(h => parseFloat(h.toFixed(2)));
+            
+            // Create the chart
+            const timeChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: days,
+                datasets: [{
+                  label: 'Hours',
+                  data: roundedHours,
+                  backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                  borderColor: 'rgba(59, 130, 246, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Hours'
+                    }
+                  }
+                }
+              }
+            });
+          })
+          .catch((error) => {
+            console.error("Error loading chart data:", error);
+          });
+      }
+    }
+
+    // Helper function to format time
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Helper function to format date
+    function formatDate(date) {
+      return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+  </script>
+</body>
+</html>

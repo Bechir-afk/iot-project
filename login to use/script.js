@@ -1,8 +1,8 @@
 // Firebase configuration
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo",
@@ -66,7 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const user = userCredential.user;
           showNotification("Login successful!", "success");
           setTimeout(() => {
-            window.location.href = "dashboard.html";
+            try {
+              window.location = new URL("profile.html", window.location.href).href;
+            } catch(e) {
+              console.error("Navigation error:", e);
+              showNotification("Failed to navigate to profile page", "error");
+            }
           }, 1500);
         })
         .catch((error) => {
