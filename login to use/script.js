@@ -14,87 +14,146 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
 
-// Notification Function
-function showNotification(message, type) {
-  const notification = document.createElement("div");
-  notification.classList.add("notification", type);
-  notification.textContent = message;
-
-  document.body.appendChild(notification);
-
-  // Show the notification
-  setTimeout(() => {
-    notification.classList.add("show");
-  }, 10);
-
-  // Hide the notification after 3 seconds
-  setTimeout(() => {
-    notification.classList.remove("show");
-    setTimeout(() => {
-      notification.remove();
-    }, 500); // Wait for the fade-out animation to complete
-  }, 3000);
+// Function to toggle dark mode
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const darkModeText = document.getElementById('dark-mode-text');
+  if (document.body.classList.contains('dark-mode')) {
+    darkModeText.textContent = 'Light Mode';
+    showNotification('Dark mode enabled.', 'success');
+  } else {
+    darkModeText.textContent = 'Dark Mode';
+    showNotification('Light mode enabled.', 'success');
+  }
 }
 
-// Login Function
-document.getElementById("login-btn").addEventListener("click", function (e) {
-  e.preventDefault();
 
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
-
+  // Firebase login
   auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      // Signed in
       const user = userCredential.user;
-      showNotification("Login successful!", "success");
-      // Redirect to another page or perform further actions
+      showNotification('Login successful!', 'success');
       setTimeout(() => {
-        window.location.href = "dashboard.html"; // Example redirect
-      }, 1500); // Redirect after 1.5 seconds
+        window.location.href = 'dashboard.html'; // Redirect to dashboard after login
+      }, 2000);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-
-      if (errorCode === "auth/wrong-password") {
-        showNotification("Incorrect password.", "error");
-      } else if (errorCode === "auth/user-not-found") {
-        showNotification("User not found.", "error");
-      } else {
-        showNotification(`Login failed: ${errorMessage}`, "error");
-      }
+      showNotification(`Login failed: ${errorMessage}`, 'error');
     });
-});
 
-// Forgot Password Function
-document.getElementById("forgot-password").addEventListener("click", function (e) {
-  e.preventDefault();
 
-  const email = prompt("Please enter your email address:");
+// Function to handle signup
+function signup() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
 
-  if (email) {
-    auth.sendPasswordResetEmail(email)
-      .then(() => {
-        showNotification("Password reset email sent. Check your inbox.", "success");
+  if (!email || !password) {
+    showNotification('Please enter both email and password.', 'error');
+    return;
+  }
+
+  // Firebase signup
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      showNotification('Signup successful! Please verify your email.', 'success');
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      showNotification(`Signup failed: ${errorMessage}`, 'error');
+    });
+}
+
+// Function to reset password
+function resetPassword() {
+  const email = document.getElementById('email').value.trim();
+
+  if (!email) {
+    showNotification('Please enter your email address.', 'error');
+    return;
+  }
+
+  // Firebase password reset
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      showNotification('Password reset email sent!', 'success');
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      showNotification(`Error sending password reset email: ${errorMessage}`, 'error');
+    });
+}
+
+// Function to handle login
+function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+
+  if (!email || !password) {
+    showNotification('Please enter both email and password.', 'error');
+    return;
+  }
+
+  // Check if email and password are "admine"
+  if (email === "admine" && password === "admine") {
+    // Firebase login (if needed)
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        showNotification('Login successful!', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html'; // Redirect to dashboard after login
+        }, 2000);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-
-        if (errorCode === "auth/user-not-found") {
-          showNotification("User not found.", "error");
-        } else {
-          showNotification(`Error sending password reset email: ${errorMessage}`, "error");
-        }
+        showNotification(`Login failed: ${errorMessage}`, 'error');
       });
   } else {
-    showNotification("Please enter a valid email address.", "error");
+    // Show alert for "false response"
+    alert("false response");
   }
-});
+}
 
-// Password Reveal Animation
-gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
+// Function to toggle password visibility
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById('login-password');
+  const togglePasswordText = document.getElementById('toggle-password-text');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    togglePasswordText.textContent = 'Hide Password';
+  } else {
+    passwordInput.type = 'password';
+    togglePasswordText.textContent = 'Show Password';
+  }
+}
+
+// Helper function to show notifications
+function showNotification(message, type) {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  // Remove notification after 3 seconds
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+// Attach event listeners
+document.getElementById('login-btn').addEventListener('click', login);
+document.getElementById('forgot-password').addEventListener('click', resetPassword);
+document.getElementById('toggle-password').addEventListener('click', togglePasswordVisibility);
+
+
+  gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
 
 const BLINK_SPEED = 0.075;
 const TOGGLE_SPEED = 0.125;
@@ -121,10 +180,12 @@ const BLINK = () => {
     repeat,
     yoyo: true
   }).
+
     to('.lid--upper', {
       morphSVG: '.lid--lower',
       duration
     }).
+
     to('#eye-open path', {
       morphSVG: '#eye-closed path',
       duration
@@ -167,10 +228,12 @@ TOGGLE.addEventListener('click', () => {
         busy = false;
       }
     })
+
       .to('.lid--upper', {
         morphSVG: '.lid--lower',
         duration
       }).
+
       to('#eye-open path', {
         morphSVG: '#eye-closed path',
         duration
@@ -194,6 +257,7 @@ TOGGLE.addEventListener('click', () => {
               }` :
               INPUT.value
         },
+
         onUpdate: () => {
           const len = val.length - PROXY.innerText.length;
           INPUT.value = `${PROXY.innerText}${new Array(len).fill('•').join('')}`;
@@ -207,10 +271,12 @@ TOGGLE.addEventListener('click', () => {
         busy = false;
       }
     }).
+
       to('.lid--upper', {
         morphSVG: '.lid--upper',
         duration
       }).
+
       to('#eye-open path', {
         morphSVG: '#eye-open path',
         duration
@@ -227,6 +293,7 @@ TOGGLE.addEventListener('click', () => {
           chars,
           text: new Array(INPUT.value.length).fill('•').join('')
         },
+
         onUpdate: () => {
           INPUT.value = `${PROXY.innerText}${val.slice(
             PROXY.innerText.length,
