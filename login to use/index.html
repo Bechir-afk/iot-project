@@ -1,234 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="./style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  <link rel="icon" type="image/x-icon" href="fst.png">
-  <!-- GSAP and MorphSVG for Password Reveal Animation -->
-  <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
-  <script src="https://assets.codepen.io/16327/ScrambleTextPlugin3.min.js"></script>
-  <script src="https://unpkg.com/gsap@3.11.0/dist/gsap.min.js"></script>
-  
-  
-  
-</head>
-<body>
-  <section>
-    <!-- Background spans -->
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <link rel="icon" type="image/x-icon" href="fst.png" />
+    <!-- GSAP and MorphSVG for Password Reveal Animation -->
+    <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
+    <script src="https://assets.codepen.io/16327/ScrambleTextPlugin3.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.11.0/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <section>
+      <!-- Background spans -->
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
 
-    <div class="signin">
-      <div class="content">
-        <h2>Sign In</h2>
-        <div class="form">
-          <div class="inputBox">
-            <input type="email" id="login-email" required>
-            <i>Email</i>
-          </div>
-          <div class="inputBox">
-            <input type="password" id="login-password" required>
-            <i>Password</i>
-            <button type="button" title="Reveal Password" aria-pressed="false" class="reveal-btn" >
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <mask id="eye-open">
-                    <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12V20H12H1V12Z" fill="#D9D9D9" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
-                  </mask>
-                  <mask id="eye-closed">
-                    <path d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12V20H12H1V12Z" fill="#D9D9D9" />
-                  </mask>
-                </defs>
-                <path class="lid lid--upper" d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                <path class="lid lid--lower" d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                <g mask="url(#eye-open)">
-                  <g class="eye">
-                    <circle cy="12" cx="12" r="4" fill="currentColor" />
-                    <circle cy="11" cx="13" r="1" fill="black" />
+      <div class="signin">
+        <div class="content">
+          <h2>Sign In</h2>
+          <div class="form">
+            <div class="inputBox">
+              <input type="email" id="login-email" required />
+              <i>Email</i>
+            </div>
+            <div class="inputBox">
+              <input type="password" id="login-password" required />
+              <i>Password</i>
+              <button
+                type="button"
+                title="Reveal Password"
+                aria-pressed="false"
+                class="reveal-btn"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <mask id="eye-open">
+                      <path
+                        d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12V20H12H1V12Z"
+                        fill="#D9D9D9"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linejoin="round"
+                      />
+                    </mask>
+                    <mask id="eye-closed">
+                      <path
+                        d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12V20H12H1V12Z"
+                        fill="#D9D9D9"
+                      />
+                    </mask>
+                  </defs>
+                  <path
+                    class="lid lid--upper"
+                    d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    class="lid lid--lower"
+                    d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <g mask="url(#eye-open)">
+                    <g class="eye">
+                      <circle cy="12" cx="12" r="4" fill="currentColor" />
+                      <circle cy="11" cx="13" r="1" fill="black" />
+                    </g>
                   </g>
-                </g>
-              </svg>
-            </button>
-          </div>
-          <div class="links">
-            
-            <a href="#" id="forgot-password">Forgot Password</a>
-            <a href="signup.html">Signup</a>
-          </div>
-          <div class="inputBox">
-            <input type="submit" value="Login" id="login-btn">
+                </svg>
+              </button>
+            </div>
+            <div class="links">
+              <a href="#" id="forgot-password">Forgot Password</a>
+              <a href="signup.html">Signup</a>
+            </div>
+            <div class="inputBox">
+              <input type="submit" value="Login" id="login-btn" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- JavaScript for Firebase and Notifications -->
-  <script>
-    function showNotification(message, type) {
-      const notification = document.createElement("div");
-      notification.classList.add("notification", type);
-      notification.textContent = message;
+    <!-- JavaScript for Firebase and Notifications -->
+    <script>
+      function showNotification(message, type) {
+        const notification = document.createElement("div");
+        notification.classList.add("notification", type);
+        notification.textContent = message;
 
-      document.body.appendChild(notification);
+        document.body.appendChild(notification);
 
-      setTimeout(() => {
-        notification.classList.add("show");
-      }, 10);
-
-      setTimeout(() => {
-        notification.classList.remove("show");
         setTimeout(() => {
-          notification.remove();
-        }, 500);
-      }, 3000);
-    }
-    window.showNotification = showNotification;
+          notification.classList.add("show");
+        }, 10);
+
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => {
+            notification.remove();
+          }, 500);
+        }, 3000);
+      }
+      window.showNotification = showNotification;
     </script>
     <script src="./script.js" type="module"></script>
-  <script src="script.js"></script>
-  
-    
-    
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
-    
-    
