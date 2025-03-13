@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="stylesheet" href="./style.css">
-
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
   <link rel="icon" type="image/x-icon" href="fst.png">
   <!-- GSAP and MorphSVG for Password Reveal Animation -->
   <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
   <script src="https://assets.codepen.io/16327/ScrambleTextPlugin3.min.js"></script>
   <script src="https://unpkg.com/gsap@3.11.0/dist/gsap.min.js"></script>
+  
+  
+  
 </head>
 <body>
   <section>
@@ -154,6 +159,7 @@
     <div class="signin">
       <div class="content">
         <h2>Sign In</h2>
+        <h2>Sign In test</h2>
         <div class="form">
           <div class="inputBox">
             <input type="email" id="login-email" required>
@@ -162,7 +168,7 @@
           <div class="inputBox">
             <input type="password" id="login-password" required>
             <i>Password</i>
-            <button type="button" title="Reveal Password" aria-pressed="false" class="reveal-btn">
+            <button type="button" title="Reveal Password" aria-pressed="false" class="reveal-btn" >
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <mask id="eye-open">
@@ -184,6 +190,7 @@
             </button>
           </div>
           <div class="links">
+            
             <a href="#" id="forgot-password">Forgot Password</a>
             <a href="signup.html">Signup</a>
           </div>
@@ -218,6 +225,163 @@
     window.showNotification = showNotification;
     </script>
     <script src="./script.js" type="module"></script>
+  <script src="script.js"></script>
+  <script>gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
+
+    const BLINK_SPEED = 0.075;
+    const TOGGLE_SPEED = 0.125;
+    const ENCRYPT_SPEED = 1;
+
+    let busy = false;
+
+    const EYE = document.querySelector('.eye');
+    const TOGGLE = document.querySelector('button');
+    const INPUT = document.querySelector('#login-password');
+    const PROXY = document.createElement('div');
+
+    const chars =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
+
+    let blinkTl;
+    const BLINK = () => {
+      const delay = gsap.utils.random(2, 8);
+      const duration = BLINK_SPEED;
+      const repeat = Math.random() > 0.5 ? 3 : 1;
+      blinkTl = gsap.timeline({
+        delay,
+        onComplete: () => BLINK(),
+        repeat,
+        yoyo: true
+      }).
+
+        to('.lid--upper', {
+          morphSVG: '.lid--lower',
+          duration
+        }).
+
+        to('#eye-open path', {
+          morphSVG: '#eye-closed path',
+          duration
+        },
+          0);
+    };
+
+    BLINK();
+
+    const posMapper = gsap.utils.mapRange(-100, 100, 30, -30);
+    let reset;
+
+    const MOVE_EYE = ({ x, y }) => {
+      if (reset) reset.kill();
+      reset = gsap.delayedCall(2, () => {
+        gsap.to('.eye', { xPercent: 0, yPercent: 0, duration: 0.2 });
+      });
+      const BOUNDS = EYE.getBoundingClientRect();
+      gsap.set('.eye', {
+        xPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.x - x)),
+        yPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.y - y))
+      });
+    };
+
+    window.addEventListener('pointermove', MOVE_EYE);
+
+    TOGGLE.addEventListener('click', () => {
+      if (busy) return;
+      const isText = INPUT.matches('[type=password]');
+      const val = INPUT.value;
+      busy = true;
+      TOGGLE.setAttribute('aria-pressed', isText);
+      const duration = TOGGLE_SPEED;
+
+      if (isText) {
+        if (blinkTl) blinkTl.kill();
+
+        gsap.timeline({
+          onComplete: () => {
+            busy = false;
+          }
+        })
+
+          .to('.lid--upper', {
+            morphSVG: '.lid--lower',
+            duration
+          }).
+
+          to('#eye-open path', {
+            morphSVG: '#eye-closed path',
+            duration
+          },
+            0)
+          .to(PROXY, {
+            duration: ENCRYPT_SPEED,
+            onStart: () => {
+              INPUT.type = 'text';
+            },
+            onComplete: () => {
+              PROXY.innerHTML = '';
+              INPUT.value = val;
+            },
+            scrambleText: {
+              chars,
+              text:
+                INPUT.value.charAt(INPUT.value.length - 1) === ' ' ?
+                  `${INPUT.value.slice(0, INPUT.value.length - 1)}${chars.charAt(
+                    Math.floor(Math.random() * chars.length))
+                  }` :
+                  INPUT.value
+            },
+
+            onUpdate: () => {
+              const len = val.length - PROXY.innerText.length;
+              INPUT.value = `${PROXY.innerText}${new Array(len).fill('•').join('')}`;
+            }
+          },
+            0);
+      } else {
+        gsap.timeline({
+          onComplete: () => {
+            BLINK();
+            busy = false;
+          }
+        }).
+
+          to('.lid--upper', {
+            morphSVG: '.lid--upper',
+            duration
+          }).
+
+          to('#eye-open path', {
+            morphSVG: '#eye-open path',
+            duration
+          },
+            0).
+          to(PROXY, {
+            duration: ENCRYPT_SPEED,
+            onComplete: () => {
+              INPUT.type = 'password';
+              INPUT.value = val;
+              PROXY.innerHTML = '';
+            },
+            scrambleText: {
+              chars,
+              text: new Array(INPUT.value.length).fill('•').join('')
+            },
+
+            onUpdate: () => {
+              INPUT.value = `${PROXY.innerText}${val.slice(
+                PROXY.innerText.length,
+                val.length)
+                }`;
+            }
+          },
+            0);
+      }
+    });
+
+    const FORM = document.querySelector('form');
+    FORM.addEventListener('submit', event => event.preventDefault());
+    </script>
+    
 </body>
 </html>
     
