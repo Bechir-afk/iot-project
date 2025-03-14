@@ -6,6 +6,7 @@
   <!-- Link to the external CSS files -->
   <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="menu.css">
+  <link rel="stylesheet" href="Navigation Bar.css">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="fst.png">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -35,32 +36,28 @@
   </div>
 
   <!-- Top Navigation -->
-  <nav class="bg-white dark:bg-gray-800 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex">
-          <div class="flex-shrink-0 flex items-center">
-            <img class="h-8 w-auto" src="fst.png" alt="Logo">
-            <span class="ml-2 text-xl font-bold text-gray-800 dark:text-white">User Dashboard</span>
-          </div>
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <div class="nav-flex">
+        <div class="nav-logo">
+          <img src="fst.png" alt="Logo">
+          <span>User Dashboard</span>
         </div>
-        <div class="flex items-center">
-          <div class="relative ml-3">
-            <div>
-              <button id="user-menu-btn" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <span class="sr-only">Open user menu</span>
-                <img id="user-avatar" class="h-8 w-8 rounded-full object-cover" src="fst.png" alt="User avatar">
-              </button>
-            </div>
-            <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-              <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                <p id="menu-user-name" class="text-sm font-medium text-gray-900 dark:text-white">User Name</p>
-                <p id="menu-user-email" class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
-                <span id="menu-user-role" class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Student</span>
+        <div class="nav-menu">
+          <div class="user-menu">
+            <button id="user-menu-btn" src="home.js">
+              <span>Open user menu</span>
+              <img id="user-avatar" src="fst.png" alt="User avatar">
+            </button>
+            <div id="user-menu-dropdown" class="dropdown">
+              <div class="dropdown-header">
+                <p id="menu-user-name">User Name</p>
+                <p id="menu-user-email">user@example.com</p>
+                <span id="menu-user-role">Student</span>
               </div>
-              <a href="#" id="menu-profile" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
-              <a href="#" id="menu-settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">Sign out</button>
+              <a href="#" id="menu-profile">Your Profile</a>
+              <a href="#" id="menu-settings">Settings</a>
+              <button id="logout-btn">Sign out</button>
             </div>
           </div>
         </div>

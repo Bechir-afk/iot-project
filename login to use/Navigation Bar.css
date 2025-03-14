@@ -1,0 +1,159 @@
+/* Navigation Bar */
+.nav-bar {
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-logo img {
+    height: 2rem;
+  }
+  
+  .nav-logo span {
+    margin-left: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1a1a1a; /* Dark text color */
+  }
+  
+  .nav-menu {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-menu {
+    position: relative;
+  }
+  
+  #user-menu-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #user-avatar {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    z-index: 1000;
+  }
+  
+  .dropdown-header {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  #menu-user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  #menu-user-email {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  #menu-user-role {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 9999px;
+  }
+  
+  #menu-profile,
+  #menu-settings,
+  #logout-btn {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  
+  #menu-profile:hover,
+  #menu-settings:hover,
+  #logout-btn:hover {
+    background: #f3f4f6;
+  }
+  
+  #logout-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Dark mode styles */
+  .dark .nav-bar {
+    background: #1f2937;
+  }
+  
+  .dark .nav-logo span {
+    color: #ffffff;
+  }
+  
+  .dark .dropdown {
+    background: #374151;
+  }
+  
+  .dark #menu-user-name {
+    color: #ffffff;
+  }
+  
+  .dark #menu-user-email {
+    color: #9ca3af;
+  }
+  
+  .dark #menu-user-role {
+    background: #1e3a8a;
+    color: #93c5fd;
+  }
+  
+  .dark #menu-profile,
+  .dark #menu-settings,
+  .dark #logout-btn {
+    color: #d1d5db;
+  }
+  
+  .dark #menu-profile:hover,
+  .dark #menu-settings:hover,
+  .dark #logout-btn:hover {
+    background: #4b5563;
+  }
