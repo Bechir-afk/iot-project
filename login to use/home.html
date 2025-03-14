@@ -1,169 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>User Profile</title>
-  <!-- Link to the external CSS files -->
-  <link rel="stylesheet" href="home.css">
-  <link rel="stylesheet" href="menu.css">
-  <link rel="stylesheet" href="Navigation Bar.css">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="fst.png">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <!-- Google Material Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-</head>
-<body class="bg-gray-100 dark:bg-gray-900">
-  <section>
-    
-  <!-- Sliding Menu -->
-  <div class="menu">
-    <ul class="menu-content">
-      <li><a href="#"><span class="material-symbols-outlined">home</span><span>Home</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">dashboard</span><span>DashBoard</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">explore</span><span>Explore</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">analytics</span><span>Analytics</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">settings</span><span>Settings</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">report</span><span>Report</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">email</span><span>Contact</span></a></li>
-      <li><a href="#"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></li>
-    </ul>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>User Profile</title>
+    <!-- Link to the external CSS files -->
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="menu.css" />
+    <link rel="stylesheet" href="Navigation Bar.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="fst.png" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Google Material Icons -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-900">
+    <section>
+      <!-- Sliding Menu -->
+      <div class="menu">
+        <ul class="menu-content">
+          <li>
+            <a href="home.html"
+              ><span class="material-symbols-outlined">home</span
+              ><span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="dashboard.html"
+              ><span class="material-symbols-outlined">dashboard</span
+              ><span>DashBoard</span></a
+            >
+          </li>
+          <li>
+            <a href="explore.html"
+              ><span class="material-symbols-outlined">explore</span
+              ><span>Explore</span></a
+            >
+          </li>
+          <li>
+            <a href="analytics.html"
+              ><span class="material-symbols-outlined">analytics</span
+              ><span>Analytics</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="material-symbols-outlined">settings</span
+              ><span>Settings</span></a
+            >
+          </li>
+          <li>
+            <a href="account.html"
+              ><span class="material-symbols-outlined">person</span
+              ><span>Account</span></a
+            >
+          </li>
+          <li>
+            <a href="report.html"
+              ><span class="material-symbols-outlined">report</span
+              ><span>Report</span></a
+            >
+          </li>
+          <li>
+            <a href="contact.html"
+              ><span class="material-symbols-outlined">email</span
+              ><span>Contact</span></a
+            >
+          </li>
+          <li>
+            <a href="logout.html"
+              ><span class="material-symbols-outlined">logout</span
+              ><span>Logout</span></a
+            >
+          </li>
+        </ul>
+      </div>
 
-  <!-- Top Navigation -->
-  <nav class="nav-bar">
-    <div class="nav-container">
-      <div class="nav-flex">
-        <div class="nav-logo">
-          <img src="fst.png" alt="Logo">
-          <span>User Dashboard</span>
-        </div>
-        <div class="nav-menu">
-          <div class="user-menu">
-            <button id="user-menu-btn" src="home.js">
-              <span>Open user menu</span>
-              <img id="user-avatar" src="fst.png" alt="User avatar">
-            </button>
-            <div id="user-menu-dropdown" class="dropdown">
-              <div class="dropdown-header">
-                <p id="menu-user-name">User Name</p>
-                <p id="menu-user-email">user@example.com</p>
-                <span id="menu-user-role">Student</span>
+      <!-- Top Navigation -->
+      <nav class="nav-bar">
+        <div class="nav-container">
+          <div class="nav-flex">
+            <div class="nav-logo">
+              <img src="fst.png" alt="Logo" />
+              <span>User Dashboard</span>
+            </div>
+            <div class="nav-menu">
+              <div class="user-menu">
+                <button id="user-menu-btn">
+                  <span>Open user menu</span>
+                  <img id="user-avatar" src="fst.png" alt="User avatar" />
+                </button>
+                <div id="user-menu-dropdown" class="dropdown hidden">
+                  <div class="dropdown-header">
+                    <p id="menu-user-name">User Name</p>
+                    <p id="menu-user-email">user@example.com</p>
+                    <span id="menu-user-role">Student</span>
+                  </div>
+                  <a href="#" id="menu-profile">Your Profile</a>
+                  <a href="#" id="menu-settings">Settings</a>
+                  <button id="logout-btn">Sign out</button>
+                </div>
               </div>
-              <a href="#" id="menu-profile">Your Profile</a>
-              <a href="#" id="menu-settings">Settings</a>
-              <button id="logout-btn">Sign out</button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </nav>
+      </nav>
 
-  <!-- Main Content -->
-  <div class="main-container">
-    <!-- Welcome Banner -->
-    <div id="welcome-banner" class="welcome-banner hidden" role="alert">
-      <div class="banner-content">
-        <div class="banner-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
-          </svg>
-        </div>
-        <div>
-          <p id="welcome-message">Login Successful!</p>
-          <p id="login-timestamp"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <!-- Time Card -->
-    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Time Tracking</h3>
-        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Today's attendance details</p>
-      </div>
-      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+      <!-- Main Content -->
+      <div class="main-container">
+        <!-- Welcome Banner -->
+        <div id="welcome-banner" class="welcome-banner hidden" role="alert">
+          <div class="banner-content">
+            <div class="banner-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path
+                  d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+                />
               </svg>
             </div>
             <div>
-              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Time In</p>
-              <p id="time-in" class="text-lg font-semibold text-gray-900 dark:text-white">Loading...</p>
-              <p id="time-in-date" class="text-xs text-gray-500 dark:text-gray-400">Loading...</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Time Out</p>
-              <p id="time-out" class="text-lg font-semibold text-gray-900 dark:text-white">Not logged out yet</p>
-              <p id="time-out-date" class="text-xs text-gray-500 dark:text-gray-400">-</p>
+              <p id="welcome-message">Login Successful!</p>
+              <p id="login-timestamp"></p>
             </div>
           </div>
         </div>
-        <div class="mt-6">
-          <button id="log-time-btn" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            Log Time Out
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Recent Activity -->
-    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Recent Login Activity</h3>
-        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Your login history</p>
-      </div>
-      <div class="border-t border-gray-200 dark:border-gray-700">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time In</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time Out</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Duration</th>
-              </tr>
-            </thead>
-            <tbody id="login-history" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400" colspan="4">Loading login history...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Time Distribution Chart -->
-    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Weekly Time Distribution</h3>
-        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Hours logged per day this week</p>
-      </div>
-      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
-        <canvas id="timeChart" height="200"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
 
-  <script src="home.js"></script>
-</body>
+        <!-- Time Card -->
+        <div
+          class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6"
+        >
+          <div class="px-4 py-5 sm:px-6">
+            <h3
+              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+            >
+              Time Tracking
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+              Today's attendance details
+            </p>
+          </div>
+          <div
+            class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-sm font-medium text-gray-600 dark:text-gray-400"
+                  >
+                    Time In
+                  </p>
+                  <p
+                    id="time-in"
+                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                  >
+                    Loading...
+                  </p>
+                  <p
+                    id="time-in-date"
+                    class="text-xs text-gray-500 dark:text-gray-400"
+                  >
+                    Loading...
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-sm font-medium text-gray-600 dark:text-gray-400"
+                  >
+                    Time Out
+                  </p>
+                  <p
+                    id="time-out"
+                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                  >
+                    Not logged out yet
+                  </p>
+                  <p
+                    id="time-out-date"
+                    class="text-xs text-gray-500 dark:text-gray-400"
+                  >
+                    -
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6">
+              <button
+                id="log-time-btn"
+                class="px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Log Time Out
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
+          <div class="px-4 py-5 sm:px-6">
+            <h3
+              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+            >
+              Recent Login Activity
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+              Your login history
+            </p>
+          </div>
+          <div class="border-t border-gray-200 dark:border-gray-700">
+            <div class="overflow-x-auto">
+              <table
+                class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Time In
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Time Out
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Duration
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="login-history"
+                  class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                >
+                  <tr>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"
+                      colspan="4"
+                    >
+                      Loading login history...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Distribution Chart -->
+        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+          <div class="px-4 py-5 sm:px-6">
+            <h3
+              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+            >
+              Weekly Time Distribution
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+              Hours logged per day this week
+            </p>
+          </div>
+          <div
+            class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6"
+          >
+            <canvas id="timeChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="home.js"></script>
+  </body>
 </html>

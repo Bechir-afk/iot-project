@@ -12,6 +12,67 @@ body {
   color: #333;
 }
 
+/* Sliding Menu Styles */
+.menu::-webkit-scrollbar {
+  display: none;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 85px;
+  height: 100%;
+  transition: 0.3s;
+  scrollbar-width: none;
+  overflow: hidden scroll;
+  background: #ffffff12;
+  -ms-overflow-style: none;
+  padding: 20px 20px 20px 0;
+  backdrop-filter: blur(5px);
+  box-shadow: 8px 0px 9px 0px #00000014;
+}
+
+.menu:hover {
+  width: 260px;
+}
+
+.menu:hover li span:nth-child(2) {
+  display: block;
+}
+
+.menu-content li {
+  list-style: none;
+  border-radius: 0px 50px 50px 0;
+  transition: 0.3s;
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.menu-content li:hover {
+  background: #0c0c0c;
+}
+
+.menu-content li span:nth-child(2) {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(213, 213, 213);
+  display: flex;
+  align-items: center;
+  font-family: "calibri";
+}
+
+.material-symbols-outlined {
+  padding: 10px;
+  font-size: 25px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: #0c0c0c;
+}
+
 /* Navigation Bar */
 .nav-bar {
   background: #ffffff;
@@ -200,4 +261,161 @@ body {
 
 #login-timestamp {
   font-size: 0.875rem; /* text-sm */
+}
+.recent-login-activity {
+  background-color: white;
+  color: black;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+  }
+  .recent-login-activity .header {
+  padding: 1.25rem 1.5rem;
+  }
+  .recent-login-activity .title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #1a202c;
+  }
+  .recent-login-activity .subtitle {
+  margin-top: 0.25rem;
+  max-width: 32rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  }
+  .recent-login-activity .content {
+  border-top: 1px solid #e5e7eb;
+  }
+  .recent-login-activity .table-container {
+  overflow-x: auto;
+  }
+  .recent-login-activity .table {
+  min-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  }
+  .recent-login-activity .table-header {
+  background-color: #f9fafb;
+  }
+  .recent-login-activity .table-header-cell {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  }
+  .recent-login-activity .table-body {
+  background-color: white;
+  }
+  .recent-login-activity .table-cell {
+  padding: 1rem 1.5rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  color: #6b7280;
+  }
+  .dark .recent-login-activity {
+  background-color: #1f2937;
+  color: white;
+  }
+  .dark .recent-login-activity .header {
+  padding: 1.25rem 1.5rem;
+  }
+  .dark .recent-login-activity .title {
+  color: #f9fafb;
+  }
+  .dark .recent-login-activity .subtitle {
+  color: #9ca3af;
+  }
+  .dark .recent-login-activity .content {
+  border-top: 1px solid #374151;
+  }
+  .dark .recent-login-activity .table-header {
+  background-color: #374151;
+  }
+  .dark .recent-login-activity .table-header-cell {
+  color: #d1d5db;
+  }
+  .dark .recent-login-activity .table-body {
+  background-color: #1f2937;
+  }
+  .dark .recent-login-activity .table-cell {
+  color: #9ca3af;
+  }
+
+/* CSS for Time Card */
+.time-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.time-card-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.time-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+.time-card-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.time-card-body {
+  display: flex;
+  flex-direction: column;
+}
+.time-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.time-card-item {
+  display: flex;
+  align-items: center;
+}
+.time-card-icon {
+  margin-right: 0.5rem;
+}
+.icon-green {
+  color: #10b981;
+}
+.icon-red {
+  color: #ef4444;
+}
+.time-card-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.time-card-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+}
+.time-card-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.time-card-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.5rem;
+  margin-top: 1rem;
+  text-align: right;
+}
+.time-card-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.time-card-button:hover {
+  background-color: #2563eb;
 }
