@@ -66,15 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
           const user = userCredential.user;
           showNotification(`Welcome back, ${user.email}!`, "success");
           
-          // Store login success info for profile page to display
+          // Store login success info for home page to display
           sessionStorage.setItem('loginSuccess', 'true');
           sessionStorage.setItem('loginEmail', user.email);
           sessionStorage.setItem('loginTime', new Date().toISOString());
           
-          console.log("Redirecting to:", "profile.html");
+          console.log("Redirecting to:", "home.html");
           // Give more time to see the success message
           setTimeout(() => {
-            window.location.href = "profile.html";
+            window.location.href = "home.html";
           }, 1500);
         })
         .catch((error) => {
