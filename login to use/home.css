@@ -1,3 +1,4 @@
+
 /* Global reset */
 * {
     margin: 0;
@@ -16,6 +17,7 @@
   .menu::-webkit-scrollbar {
     display: none;
   }
+  
   
   .menu {
     position: fixed;

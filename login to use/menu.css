@@ -6,7 +6,8 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(#051f30, #000000);
+    background: linear-gradient( #FDFBEE,#57B4BA, #FE4F2D);
+    animation: animate 5s linear infinite;
 }
 
 .menu::-webkit-scrollbar {
@@ -22,7 +23,7 @@ body {
     transition: .3s;
     scrollbar-width: none;
     overflow: hidden scroll;
-    background: #ffffff12;
+    background: #00000012;
     -ms-overflow-style: none;
     padding: 20px 20px 20px 0;
     backdrop-filter: blur(5px);
@@ -46,7 +47,7 @@ body {
 }
 
 .menu-content li:hover {
-    background: #0c0c0c;
+    background: #015551;
 }
 
 .menu-content li span:nth-child(2) {
@@ -66,5 +67,5 @@ a {
     font-size: 25px;
     margin-right: 10px;
     border-radius: 50%;
-    background: #0c0c0c;
+    background: #015551;
 }
