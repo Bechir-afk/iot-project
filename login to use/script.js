@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
           sessionStorage.setItem('loginEmail', user.email);
           sessionStorage.setItem('loginTime', new Date().toISOString());
           
-          console.log("Redirecting to:", "home.html");
+          console.log("Redirecting to:", "home1.html");
           // Give more time to see the success message
           setTimeout(() => {
-            window.location.href = "home.html";
+            window.location.href = "home1.html";
           }, 1500);
         })
         .catch((error) => {
