@@ -376,3 +376,97 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 5000);
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Weekly attendance chart
+  const weeklyCtx = document
+    .getElementById("weeklyAttendanceChart")
+    .getContext("2d");
+  const weeklyChart = new Chart(weeklyCtx, {
+    type: "bar",
+    data: {
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+      datasets: [
+        {
+          label: "Present",
+          data: [18, 20, 15, 19],
+          backgroundColor: "rgba(34, 197, 94, 0.5)",
+          borderColor: "rgb(34, 197, 94)",
+          borderWidth: 1,
+        },
+        {
+          label: "Absent",
+          data: [2, 0, 5, 1],
+          backgroundColor: "rgba(239, 68, 68, 0.5)",
+          borderColor: "rgb(239, 68, 68)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: "rgba(156, 163, 175, 0.1)",
+          },
+        },
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+      },
+    },
+  });
+
+  // Punctuality chart
+  const punctualityCtx = document
+    .getElementById("punctualityChart")
+    .getContext("2d");
+  const punctualityChart = new Chart(punctualityCtx, {
+    type: "doughnut",
+    data: {
+      labels: [
+        "Early (>5 mins)",
+        "On Time (±5 mins)",
+        "Late (5-15 mins)",
+        "Very Late (>15 mins)",
+      ],
+      datasets: [
+        {
+          data: [12, 25, 7, 3],
+          backgroundColor: [
+            "rgba(34, 197, 94, 0.6)",
+            "rgba(59, 130, 246, 0.6)",
+            "rgba(245, 158, 11, 0.6)",
+            "rgba(239, 68, 68, 0.6)",
+          ],
+          borderColor: [
+            "rgb(34, 197, 94)",
+            "rgb(59, 130, 246)",
+            "rgb(245, 158, 11)",
+            "rgb(239, 68, 68)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "right",
+          labels: {
+            color: window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "#E5E7EB"
+              : "#4B5563",
+          },
+        },
+      },
+    },
+  });
+});
