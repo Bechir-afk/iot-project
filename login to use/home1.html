@@ -3,8 +3,6 @@
   <meta charset="UTF-8">
   <title>RFID Attendance System - Student</title>
   <!-- Link to the external CSS files -->
-  <link rel="stylesheet" href="profile.css">
-  <link rel="stylesheet" href="menu.css">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="fst.png">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,6 +12,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <!-- Google Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <!-- Add this to the <head> section -->
+  <link rel="stylesheet" href="home.css">*
+  <link rel="stylesheet" href="sharedcss.css">
+<script src="theme.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
   <!-- Sliding Menu -->
@@ -88,7 +90,7 @@
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">92%</span>
+            <span id="attendance-rate" class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">92%</span>
             <h3 class="text-base font-normal text-gray-500 dark:text-gray-400">Attendance Rate</h3>
           </div>
           <div class="ml-5 w-0 flex items-center justify-end flex-1">
@@ -99,7 +101,7 @@
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">5</span>
+            <span id="absence-count" class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">5</span>
             <h3 class="text-base font-normal text-gray-500 dark:text-gray-400">Absences</h3>
           </div>
           <div class="ml-5 w-0 flex items-center justify-end flex-1">
@@ -110,7 +112,7 @@
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">7</span>
+            <span id="late-count" class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">7</span>
             <h3 class="text-base font-normal text-gray-500 dark:text-gray-400">Late Arrivals</h3>
           </div>
           <div class="ml-5 w-0 flex items-center justify-end flex-1">
@@ -121,7 +123,7 @@
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">12</span>
+            <span id="early-count" class="text-2xl sm:text-3xl leading-none font-bold text-gray-900 dark:text-white">12</span>
             <h3 class="text-base font-normal text-gray-500 dark:text-gray-400">Early Arrivals</h3>
           </div>
           <div class="ml-5 w-0 flex items-center justify-end flex-1">
@@ -169,58 +171,17 @@
         <a href="schedule.html" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Full Schedule →</a>
       </div>
       <div class="border-t border-gray-200 dark:border-gray-700">
-        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700" id="today-schedule">
+          <!-- Dynamic schedule items will be loaded here -->
           <li class="p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div class="flex-shrink-0 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
-                  <p class="text-sm font-medium text-blue-700 dark:text-blue-300">08:30</p>
-                  <p class="text-sm font-medium text-blue-700 dark:text-blue-300">10:00</p>
+                  <span class="material-symbols-outlined text-blue-500">sync</span>
                 </div>
                 <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">Mathematics</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Prof. Johnson • Room 305</p>
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Loading schedule...</h4>
                 </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Completed</span>
-                <span class="flex-shrink-0 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                  Present
-                </span>
-              </div>
-            </div>
-          </li>
-          <li class="p-4 bg-green-50 dark:bg-green-900/10">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-center">
-                  <p class="text-sm font-medium text-green-700 dark:text-green-300">10:15</p>
-                  <p class="text-sm font-medium text-green-700 dark:text-green-300">11:45</p>
-                </div>
-                <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">Physics</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Prof. Smith • Room 204</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">In Progress</span>
-              </div>
-            </div>
-          </li>
-          <li class="p-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-center">
-                  <p class="text-sm font-medium text-purple-700 dark:text-purple-300">13:00</p>
-                  <p class="text-sm font-medium text-purple-700 dark:text-purple-300">14:30</p>
-                </div>
-                <div class="ml-4">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">Computer Science</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Prof. Williams • Lab 102</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Upcoming</span>
               </div>
             </div>
           </li>
@@ -253,13 +214,13 @@
             <tbody id="attendance-table-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               <!-- Data will be populated dynamically from Firebase -->
               <tr>
-                <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
                   <div class="flex justify-center items-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Loading attendance data...</span>
+                    Loading attendance data...
                   </div>
                 </td>
               </tr>
@@ -328,52 +289,15 @@
         </div>
       </div>
       <div class="border-t border-gray-200 dark:border-gray-700">
-        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-          <li class="p-4 bg-yellow-50 dark:bg-yellow-900/10">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <span class="material-symbols-outlined text-yellow-500">warning</span>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Attendance Alert</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">You have missed 20% of your Mathematics classes this month. Please improve your attendance.</p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">2 days ago</p>
-              </div>
-            </div>
-          </li>
+        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700" id="notifications-list">
+          <!-- Dynamic notifications will be loaded here -->
           <li class="p-4">
             <div class="flex">
               <div class="flex-shrink-0">
-                <span class="material-symbols-outlined text-blue-500">info</span>
+                <span class="material-symbols-outlined text-gray-400">sync</span>
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Late Arrival Pattern</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">You've been late to Physics class 3 times in the last two weeks.</p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">1 week ago</p>
-              </div>
-            </div>
-          </li>
-          <li class="p-4">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <span class="material-symbols-outlined text-green-500">verified</span>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Attendance Milestone</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Congratulations! You've achieved 100% attendance in Computer Science this month.</p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">2 weeks ago</p>
-              </div>
-            </div>
-          </li>
-          <li class="p-4">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <span class="material-symbols-outlined text-purple-500">calendar_today</span>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Schedule Change Notice</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Starting next week, Mathematics class will begin at 8:15 AM instead of 8:30 AM.</p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">3 weeks ago</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Loading notifications...</p>
               </div>
             </div>
           </li>
@@ -383,90 +307,93 @@
   </div>
 
   <!-- Initialize charts -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Weekly attendance chart
-      const weeklyCtx = document.getElementById('weeklyAttendanceChart').getContext('2d');
-      const weeklyChart = new Chart(weeklyCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [
-            {
-              label: 'Present',
-              data: [18, 20, 15, 19],
-              backgroundColor: 'rgba(34, 197, 94, 0.5)',
-              borderColor: 'rgb(34, 197, 94)',
-              borderWidth: 1
-            },
-            {
-              label: 'Absent',
-              data: [2, 0, 5, 1],
-              backgroundColor: 'rgba(239, 68, 68, 0.5)',
-              borderColor: 'rgb(239, 68, 68)',
-              borderWidth: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(156, 163, 175, 0.1)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              }
-            }
-          }
-        }
-      });
-      
-      // Punctuality chart
-      const punctualityCtx = document.getElementById('punctualityChart').getContext('2d');
-      const punctualityChart = new Chart(punctualityCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Early (>5 mins)', 'On Time (±5 mins)', 'Late (5-15 mins)', 'Very Late (>15 mins)'],
-          datasets: [{
-            data: [12, 25, 7, 3],
-            backgroundColor: [
-              'rgba(34, 197, 94, 0.6)',
-              'rgba(59, 130, 246, 0.6)',
-              'rgba(245, 158, 11, 0.6)',
-              'rgba(239, 68, 68, 0.6)'
-            ],
-            borderColor: [
-              'rgb(34, 197, 94)',
-              'rgb(59, 130, 246)',
-              'rgb(245, 158, 11)',
-              'rgb(239, 68, 68)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'right',
-              labels: {
-                color: window.matchMedia('(prefers-color-scheme: dark)').matches ? '#E5E7EB' : '#4B5563'
-              }
-            }
-          }
-        }
-      });
-    });
-  </script>
+
 
   <!-- Main JavaScript -->
   <script src="home11.js"></script>
+  <!-- Add this right before the closing body tag -->
+  <script>
+    // This script runs after everything else is loaded
+    setTimeout(function() {
+      console.log("EMERGENCY STATS UPDATE RUNNING");
+      
+      // Get direct references to the elements
+      const attendanceRate = document.getElementById('attendance-rate');
+      const absenceCount = document.getElementById('absence-count');
+      const lateCount = document.getElementById('late-count');
+      const earlyCount = document.getElementById('early-count');
+      
+      // Check if Firebase is accessible
+      if (typeof firebase === 'undefined') {
+        console.error("Firebase not found!");
+        return;
+      }
+      
+      // Get the current user
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        console.log("No authenticated user found");
+        return;
+      }
+      
+      console.log("User authenticated:", user.uid);
+      
+      // DIRECT QUERY without any filters
+      firebase.firestore().collection('attendance')
+        .where('userId', '==', user.uid)
+        .get()
+        .then(function(snapshot) {
+          console.log("Found records:", snapshot.size);
+          
+          // Initialize counters
+          let totalClasses = snapshot.size;
+          let presentCount = 0;
+          let earlyCount = 0;
+          let lateCount = 0;
+          
+          // Process records
+          snapshot.forEach(function(doc) {
+            const data = doc.data();
+            console.log("Processing record:", doc.id);
+            
+            if (data.clockInTime) {
+              presentCount++;
+              
+              if (data.earlyLateStatus === 'early') {
+                earlyCount++;
+              } else if (data.earlyLateStatus === 'late') {
+                lateCount++;
+              }
+            }
+          });
+          
+          // Calculate stats
+          const absenceCount = totalClasses - presentCount;
+          const attendanceRate = totalClasses > 0 ? 
+            Math.round((presentCount / totalClasses) * 100) : 0;
+          
+          console.log("DIRECT UPDATE WITH:", {
+            attendanceRate, absenceCount, lateCount, earlyCount
+          });
+          
+          // DIRECTLY OVERRIDE the HTML content
+          document.getElementById('attendance-rate').innerHTML = `${attendanceRate}%`;
+          document.getElementById('absence-count').innerHTML = `${absenceCount}`;
+          document.getElementById('late-count').innerHTML = `${lateCount}`;
+          document.getElementById('early-count').innerHTML = `${earlyCount}`;
+          
+          // Force a style change to make it obvious the update happened
+          document.getElementById('attendance-rate').style.color = '#059669';
+          document.getElementById('absence-count').style.color = '#DC2626';
+          document.getElementById('late-count').style.color = '#D97706';
+          document.getElementById('early-count').style.color = '#2563EB';
+          
+          console.log("✅ EMERGENCY UPDATE SUCCESSFUL");
+        })
+        .catch(function(error) {
+          console.error("Emergency update failed:", error);
+        });
+    },); // Wait 1 seconds to ensure everything is loaded
+ </script>
 </body>
 </html>

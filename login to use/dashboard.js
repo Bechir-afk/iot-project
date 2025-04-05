@@ -140,6 +140,9 @@ const firebaseConfig = {
       
       // Load chart data
       loadChartData();
+      
+      // Set up RFID listener for real-time detection
+      setupRFIDListener();
     } else {
       // Redirect to login
       window.location.href = 'login.html';
@@ -744,3 +747,36 @@ const firebaseConfig = {
       refreshHistoryBtn.addEventListener('click', loadAttendanceHistory);
     }
   });
+
+// Add this function to your dashboard.js
+function setupRFIDListener() {
+  console.log("Setting up RFID scanner listener...");
+  
+  // Reference to the latest_scan node
+  const latestScanRef = rtdb.ref('/latest_scan');
+  
+  // Listen for changes
+  latestScanRef.on('value', (snapshot) => {
+    const scanData = snapshot.val();
+    
+    if (scanData && scanData.uid) {
+      console.log("RFID scan detected:", scanData.uid);
+      
+      // Fill in the RFID input field
+      const rfidInput = document.getElementById('rfid-input');
+      rfidInput.value = scanData.uid;
+      
+      // Highlight the input field to make the change noticeable
+      rfidInput.classList.add('bg-yellow-100', 'dark:bg-yellow-800');
+      setTimeout(() => {
+        rfidInput.classList.remove('bg-yellow-100', 'dark:bg-yellow-800');
+      }, 1500);
+      
+      // Simulate clicking the scan button
+      document.getElementById('scan-button').click();
+      
+      // Add visual feedback for scan
+      scanLog.textContent = `Auto-detected RFID scan: ${scanData.uid}`;
+    }
+  });
+}

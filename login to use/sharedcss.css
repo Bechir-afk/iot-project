@@ -1,0 +1,96 @@
+/* Shared styles for all pages */
+
+/* Base theme variables */
+:root {
+    /* Light theme (default) */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F9FAFB;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --border-color: #E5E7EB;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    
+    /* Font sizes */
+    --base-font-size: 1rem;
+    --small-font-size: 0.875rem;
+    --large-font-size: 1.125rem;
+  }
+  
+  /* Dark theme variables */
+  .dark {
+    --bg-primary: #1F2937;
+    --bg-secondary: #111827;
+    --text-primary: #F9FAFB;
+    --text-secondary: #D1D5DB;
+    --border-color: #374151;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Apply these variables to elements */
+  body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .bg-white, .card, .menu, .dropdown-menu, header, footer, nav, .sidebar, .settings-card {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+  }
+  
+  p, span, input, select, textarea {
+    color: var(--text-secondary);
+  }
+  
+  /* Font size classes */
+  body.font-sm {
+    font-size: var(--base-font-size, 0.875rem);
+  }
+  
+  body.font-md {
+    font-size: var(--base-font-size, 1rem);
+  }
+  
+  body.font-lg {
+    font-size: var(--base-font-size, 1.125rem);
+  }
+  
+  body.font-xl {
+    font-size: var(--base-font-size, 1.25rem);
+  }
+  
+  /* For dark/light theme transitions */
+  body, body * {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  
+  /* Dark mode overrides for Tailwind classes */
+  .dark .bg-white {
+    background-color: var(--bg-primary) !important;
+  }
+  
+  .dark .text-gray-900 {
+    color: var(--text-primary) !important;
+  }
+  
+  .dark .text-gray-500, .dark .text-gray-600 {
+    color: var(--text-secondary) !important;
+  }
+  
+  .dark .border-gray-200 {
+    border-color: var(--border-color) !important;
+  }
+  
+  /* Apply dark mode to specific components */
+  .dark .attendance-card,
+  .dark .stats-card,
+  .dark .profile-card,
+  .dark .table-card {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }

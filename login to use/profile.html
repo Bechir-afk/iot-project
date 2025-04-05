@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account - RFID Attendance System</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="fst.png">
+  <!-- Google Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="menu.css">
+  <link rel="stylesheet" href="sharedcss.css">
+  <script src="theme.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <!-- Sliding Menu -->
+  <div class="menu">
+    <ul class="menu-content">
+      <li><a href="home1.html"><span class="material-symbols-outlined">home</span><span>home</span></a></li>
+      <li><a href="dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>DashBoard</span></a></li>
+      <li><a href="explore.html"><span class="material-symbols-outlined">explore</span><span>Explore</span></a></li>
+      <li><a href="analytics.html"><span class="material-symbols-outlined">analytics</span><span>Analytics</span></a></li>
+      <li><a href="settings.html"><span class="material-symbols-outlined">settings</span><span>Settings</span></a></li>
+      <li><a href="account.html" class="active"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
+      <li><a href="report.html"><span class="material-symbols-outlined">report</span><span>Report</span></a></li>
+      <li><a href="contact.html"><span class="material-symbols-outlined">email</span><span>Contact</span></a></li>
+      <li><a href="#" id="menu-logout"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <img class="h-8 w-auto" src="fst.png" alt="Logo">
+            <span class="ml-2 text-xl font-bold text-gray-800 dark:text-white">RFID Attendance System</span>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="relative ml-3">
+            <div>
+              <button id="user-menu-btn" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <span class="sr-only">Open user menu</span>
+                <img id="user-avatar" class="h-8 w-8 rounded-full object-cover" src="fst.png" alt="User avatar">
+              </button>
+            </div>
+            <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+              <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                <p id="menu-user-name" class="text-sm font-medium text-gray-900 dark:text-white">John Smith</p>
+                <p id="menu-user-email" class="text-xs text-gray-500 dark:text-gray-400">john.smith@example.com</p>
+                <span id="menu-user-role" class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Student</span>
+              </div>
+              <a href="account.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
+              <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Page heading -->
+    <div class="px-4 py-6 sm:px-0">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Account Profile</h1>
+      
+      <!-- Profile Overview Card -->
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Profile Information</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Personal details and account information</p>
+          </div>
+          <div>
+            <button id="edit-profile-btn" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <span class="material-symbols-outlined mr-2">edit</span>
+              Edit Profile
+            </button>
+          </div>
+        </div>
+        
+        <!-- Profile Card -->
+        <div class="border-t border-gray-200 dark:border-gray-700">
+          <div class="flex flex-col md:flex-row">
+            <!-- Left column - Profile image -->
+            <div class="md:w-1/3 p-6 flex flex-col items-center">
+              <div class="relative">
+                <img id="profile-image" class="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-md" src="fst.png" alt="Profile picture">
+                <div id="image-upload-overlay" class="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+                  <span class="material-symbols-outlined text-white text-4xl">add_a_photo</span>
+                  <input type="file" id="profile-image-upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+                </div>
+              </div>
+              <h2 id="profile-name" class="mt-4 text-xl font-bold text-gray-900 dark:text-white">John Smith</h2>
+              <p id="profile-email" class="text-sm text-gray-500 dark:text-gray-400">john.smith@example.com</p>
+              <span id="profile-role" class="mt-2 inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Student</span>
+              
+              <div class="mt-6 w-full">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Account Status</h4>
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                  <div class="flex items-center mb-2">
+                    <span class="material-symbols-outlined text-green-500 mr-2">verified</span>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Verified Account</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="material-symbols-outlined text-blue-500 mr-2">shield</span>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Active Since: <span id="profile-joined-date">Jan 2023</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right column - Profile details -->
+            <div class="md:w-2/3 p-6 border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700">
+              <div class="mb-6">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Personal Information</h4>
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">First Name</dt>
+                    <dd id="profile-first-name" class="mt-1 text-sm text-gray-900 dark:text-white">John</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Name</dt>
+                    <dd id="profile-last-name" class="mt-1 text-sm text-gray-900 dark:text-white">Smith</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Student ID</dt>
+                    <dd id="profile-student-id" class="mt-1 text-sm text-gray-900 dark:text-white">ST12345678</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">RFID Card Number</dt>
+                    <dd id="profile-rfid" class="mt-1 text-sm text-gray-900 dark:text-white">67829AB45C</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Date of Birth</dt>
+                    <dd id="profile-dob" class="mt-1 text-sm text-gray-900 dark:text-white">January 15, 2000</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Gender</dt>
+                    <dd id="profile-gender" class="mt-1 text-sm text-gray-900 dark:text-white">Male</dd>
+                  </div>
+                </dl>
+              </div>
+              
+              <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Academic Information</h4>
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Department</dt>
+                    <dd id="profile-department" class="mt-1 text-sm text-gray-900 dark:text-white">Computer Science</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Year</dt>
+                    <dd id="profile-year" class="mt-1 text-sm text-gray-900 dark:text-white">3rd Year</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Program</dt>
+                    <dd id="profile-program" class="mt-1 text-sm text-gray-900 dark:text-white">Bachelor of Science</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Semester</dt>
+                    <dd id="profile-semester" class="mt-1 text-sm text-gray-900 dark:text-white">Spring 2025</dd>
+                  </div>
+                </dl>
+              </div>
+              
+              <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Contact Information</h4>
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
+                    <dd id="profile-contact-email" class="mt-1 text-sm text-gray-900 dark:text-white">john.smith@example.com</dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</dt>
+                    <dd id="profile-phone" class="mt-1 text-sm text-gray-900 dark:text-white">+1 (555) 123-4567</dd>
+                  </div>
+                  <div class="sm:col-span-2">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</dt>
+                    <dd id="profile-address" class="mt-1 text-sm text-gray-900 dark:text-white">123 Campus Drive, University City, State 12345</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Attendance Summary Card -->
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Attendance Summary</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Quick overview of your attendance statistics</p>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-green-600 dark:text-green-400">task_alt</span>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Attendance Rate</h4>
+                  <p id="attendance-rate" class="text-2xl font-bold text-gray-900 dark:text-white">92%</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-red-600 dark:text-red-400">close</span>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Absences</h4>
+                  <p id="absence-count" class="text-2xl font-bold text-gray-900 dark:text-white">5</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400">schedule</span>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Late Arrivals</h4>
+                  <p id="late-count" class="text-2xl font-bold text-gray-900 dark:text-white">7</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">timelapse</span>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Early Arrivals</h4>
+                  <p id="early-count" class="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex justify-center">
+            <a href="analytics.html" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <span class="material-symbols-outlined mr-2">analytics</span>
+              View Detailed Analytics
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Enrolled Courses -->
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Enrolled Courses</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Current semester courses</p>
+          </div>
+          <a href="explore.html" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Browse All Courses →</a>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700" id="enrolled-courses">
+            <!-- Course 1 -->
+            <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-purple-600 dark:text-purple-400">computer</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Advanced Algorithms</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">CS 401 • Prof. Sarah Johnson</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    96% Attendance
+                  </span>
+                </div>
+              </div>
+            </li>
+            
+            <!-- Course 2 -->
+            <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">api</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Database Systems</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">CS 355 • Prof. Michael Chen</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    91% Attendance
+                  </span>
+                </div>
+              </div>
+            </li>
+            
+            <!-- Course 3 -->
+            <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">code</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Web Development</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">CS 316 • Prof. Emma Brown</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                    85% Attendance
+                  </span>
+                </div>
+              </div>
+            </li>
+            
+            <!-- Course 4 -->
+            <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-600 dark:text-red-400">calculate</span>
+                  </div>
+                  <div class="ml-4">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Discrete Mathematics</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">MATH 275 • Prof. David Lee</p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                    78% Attendance
+                  </span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Account Security -->
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Account Security</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Manage your account security settings</p>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Password</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Last changed 45 days ago</p>
+              </div>
+              <a href="settings.html" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Change Password</a>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Two-Factor Authentication</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Not enabled</p>
+              </div>
+              <a href="settings.html" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Enable 2FA</a>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Session Management</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">1 active session</p>
+              </div>
+              <a href="settings.html" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">View All Sessions</a>
+            </div>
+          </div>
+          
+          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center">
+              <div>
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Account Privacy</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Manage your privacy preferences</p>
+              </div>
+              <a href="settings.html" class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none">
+                <span class="material-symbols-outlined mr-1">settings</span>
+                Settings
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="edit-profile-modal" class="hidden fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Edit Profile</h3>
+        <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="px-6 py-4">
+        <form id="edit-profile-form">
+          <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+            <div>
+              <label for="edit-first-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">First name</label>
+              <input type="text" name="first-name" id="edit-first-name" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="edit-last-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name</label>
+              <input type="text" name="last-name" id="edit-last-name" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="edit-dob" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date of Birth</label>
+              <input type="date" name="dob" id="edit-dob" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="edit-gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gender</label>
+              <select id="edit-gender" name="gender" class="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:text-white">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="edit-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+              <input type="tel" name="phone" id="edit-phone" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="edit-department" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
+              <input type="text" name="department" id="edit-department" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="edit-address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+              <input type="text" name="address" id="edit-address" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end space-x-3">
+            <button type="button" id="cancel-edit-btn" class="inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Cancel
+            </button>
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Profile Management -->
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo",
+      authDomain: "fdhf-4403b.firebaseapp.com",
+      databaseURL: "https://fdhf-4403b-default-rtdb.firebaseio.com",
+      projectId: "fdhf-4403b",
+      storageBucket: "fdhf-4403b.appspot.com",
+      messagingSenderId: "805654928789",
+      appId: "1:805654928789:web:c7d541db0c1f92196e2a9c",
+      measurementId: "G-KZNZ6JQ4FL",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    
+    // DOM Elements
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const userMenuDropdown = document.getElementById('user-menu-dropdown');
+    const logoutBtn = document.getElementById('logout-btn');
+    const menuLogout = document.getElementById('menu-logout');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editProfileModal = document.getElementById('edit-profile-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const editProfileForm = document.getElementById('edit-profile-form');
+    const profileImageUpload = document.getElementById('profile-image-upload');
+    
+    // Authentication state observer
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in
+        console.log("User is signed in:", user.email);
+        
+        // Update user email in nav dropdown
+        document.getElementById('menu-user-email').textContent = user.email;
+        document.getElementById('profile-email').textContent = user.email;
+        document.getElementById('profile-contact-email').textContent = user.email;
+        
+        // Load user profile data
+        loadUserProfile(user.uid);
+        
+        // Load attendance statistics
+        loadAttendanceStats(user.uid);
+        
+        // Load enrolled courses
+        loadEnrolledCourses(user.uid);
+      } else {
+        // User is signed out, redirect to login page
+        window.location.href = 'login.html';
+      }
+    });
+    
+    // Toggle dropdown menu
+    userMenuBtn.addEventListener('click', function() {
+      userMenuDropdown.classList.toggle('hidden');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      if (userMenuBtn && userMenuDropdown && 
+          !userMenuBtn.contains(event.target) && 
+          !userMenuDropdown.contains(event.target)) {
+        userMenuDropdown.classList.add('hidden');
+      }
+    });
+    
+    // Logout function
+    function logoutUser() {
+      auth.signOut()
+        .then(() => {
+          window.location.href = 'login.html';
+        })
+        .catch((error) => {
+          console.error("Error signing out: ", error);
+          showNotification('Error signing out. Please try again.', 'error');
+        });
+    }
+    
+    // Add event listeners for logout
+    if (logoutBtn) logoutBtn.addEventListener('click', logoutUser);
+    if (menuLogout) menuLogout.addEventListener('click', logoutUser);
+    
+    // Profile image upload
+    if (profileImageUpload) {
+      profileImageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Check if the file is an image
+        if (!file.type.match('image.*')) {
+          showNotification('Please select an image file', 'error');
+          return;
+        }
+        
+        // Check file size (limit to 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          showNotification('Image size should be less than 5MB', 'error');
+          return;
+        }
+        
+        const user = auth.currentUser;
+        if (!user) return;
+        
+        // Show loading notification
+        showNotification('Uploading profile image...', 'info');
+        
+        // Create a storage reference
+        const storageRef = storage.ref();
+        const profileImageRef = storageRef.child(`profile_images/${user.uid}/${file.name}`);
+        
+        // Upload file
+        const uploadTask = profileImageRef.put(file);
+        
+        // Monitor upload progress
+        uploadTask.on('state_changed', 
+          (snapshot) => {
+            // Progress function
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+          }, 
+          (error) => {
+            // Error function
+            console.error('Upload failed:', error);
+            showNotification('Upload failed. Please try again.', 'error');
+          }, 
+          () => {
+            // Complete function
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+              console.log('File available at', downloadURL);
+              
+              // Update profile image in UI
+              document.getElementById('profile-image').src = downloadURL;
+              document.getElementById('user-avatar').src = downloadURL;
+              
+              // Update profile image URL in Firestore
+              db.collection('users').doc(user.uid).update({
+                profileImage: downloadURL,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              })
+              .then(() => {
+                showNotification('Profile image updated successfully', 'success');
+              })
+              .catch((error) => {
+                console.error('Error updating profile:', error);
+                showNotification('Error updating profile image', 'error');
+              });
+            });
+          }
+        );
+      });
+    }
+    
+    // Edit profile modal
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener('click', function() {
+        // Populate the form with current user data
+        const user = auth.currentUser;
+        if (!user) return;
+        
+        db.collection('users').doc(user.uid).get()
+          .then((doc) => {
+            if (doc.exists) {
+              const userData = doc.data();
+              
+              // Populate form fields
+              document.getElementById('edit-first-name').value = userData.firstName || '';
+              document.getElementById('edit-last-name').value = userData.lastName || '';
+              document.getElementById('edit-dob').value = userData.dob || '';
+              document.getElementById('edit-gender').value = userData.gender || '';
+              document.getElementById('edit-phone').value = userData.phone || '';
+              document.getElementById('edit-department').value = userData.department || '';
+              document.getElementById('edit-address').value = userData.address || '';
+              
+              // Show the modal
+              editProfileModal.classList.remove('hidden');
+            }
+          })
+          .catch((error) => {
+            console.error('Error getting user data:', error);
+            showNotification('Error loading profile data', 'error');
+          });
+      });
+    }
+    
+    // Close modal buttons
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', function() {
+        editProfileModal.classList.add('hidden');
+      });
+    }
+    
+    if (cancelEditBtn) {
+      cancelEditBtn.addEventListener('click', function() {
+        editProfileModal.classList.add('hidden');
+      });
+    }
+    
+    // Click outside modal to close
+    editProfileModal.addEventListener('click', function(event) {
+      if (event.target === editProfileModal) {
+        editProfileModal.classList.add('hidden');
+      }
+    });
+    
+    // Edit profile form submission
+    if (editProfileForm) {
+      editProfileForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const user = auth.currentUser;
+        if (!user) return;
+        
+        // Get form values
+        const firstName = document.getElementById('edit-first-name').value.trim();
+        const lastName = document.getElementById('edit-last-name').value.trim();
+        const dob = document.getElementById('edit-dob').value;
+        const gender = document.getElementById('edit-gender').value;
+        const phone = document.getElementById('edit-phone').value.trim();
+        const department = document.getElementById('edit-department').value.trim();
+        const address = document.getElementById('edit-address').value.trim();
+        
+        // Create updated user data object
+        const updatedData = {
+          firstName,
+          lastName,
+          dob,
+          gender,
+          phone,
+          department,
+          address,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Update user data in Firestore
+        db.collection('users').doc(user.uid).update(updatedData)
+          .then(() => {
+            // Close the modal
+            editProfileModal.classList.add('hidden');
+            
+            // Show success notification
+            showNotification('Profile updated successfully', 'success');
+            
+            // Update UI with new data
+            loadUserProfile(user.uid);
+          })
+          .catch((error) => {
+            console.error('Error updating profile:', error);
+            showNotification('Error updating profile', 'error');
+          });
+      });
+    }
+    
+    // Load user profile data
+    function loadUserProfile(userId) {
+      db.collection('users').doc(userId).get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            
+            // Update profile page with user data
+            const fullName = userData.firstName && userData.lastName ? 
+              `${userData.firstName} ${userData.lastName}` : 'No Name Set';
+            
+            // Update name display
+            document.getElementById('menu-user-name').textContent = fullName;
+            document.getElementById('profile-name').textContent = fullName;
+            
+            // Update user role if available
+            if (userData.role) {
+              document.getElementById('menu-user-role').textContent = userData.role;
+              document.getElementById('profile-role').textContent = userData.role;
+            }
+            
+            // Update profile image if available
+            if (userData.profileImage) {
+              document.getElementById('user-avatar').src = userData.profileImage;
+              document.getElementById('profile-image').src = userData.profileImage;
+            }
+            
+            // Update other profile fields
+            document.getElementById('profile-first-name').textContent = userData.firstName || 'Not set';
+            document.getElementById('profile-last-name').textContent = userData.lastName || 'Not set';
+            document.getElementById('profile-student-id').textContent = userData.studentId || 'Not set';
+            document.getElementById('profile-rfid').textContent = userData.rfidTag || 'Not set';
+            document.getElementById('profile-dob').textContent = userData.dob || 'Not set';
+            document.getElementById('profile-gender').textContent = userData.gender || 'Not set';
+            document.getElementById('profile-department').textContent = userData.department || 'Not set';
+            document.getElementById('profile-year').textContent = userData.year || 'Not set';
+            document.getElementById('profile-program').textContent = userData.program || 'Not set';
+            document.getElementById('profile-semester').textContent = userData.semester || 'Not set';
+            document.getElementById('profile-phone').textContent = userData.phone || 'Not set';
+            document.getElementById('profile-address').textContent = userData.address || 'Not set';
+            
+            // Format and display join date
+            if (userData.createdAt) {
+              const joinDate = userData.createdAt.toDate();
+              const formattedDate = joinDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+              document.getElementById('profile-joined-date').textContent = formattedDate;
+            }
+          } else {
+            console.log("No user data found!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting user data:", error);
+        });
+    }
+    
+    // Load attendance statistics
+    function loadAttendanceStats(userId) {
+      db.collection('attendance')
+        .where('userId', '==', userId)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            updateStatsUI(0, 0, 0, 0);
+            return;
+          }
+          
+          // Initialize counters
+          let totalClasses = snapshot.size;
+          let presentCount = 0;
+          let earlyCount = 0;
+          let lateCount = 0;
+          
+          // Process each record
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            
+            if (data.clockInTime) {
+              presentCount++;
+              
+              if (data.earlyLateStatus === 'early') {
+                earlyCount++;
+              } else if (data.earlyLateStatus === 'late') {
+                lateCount++;
+              }
+            }
+          });
+          
+          // Calculate final stats
+          const absenceCount = totalClasses - presentCount;
+          const attendanceRate = totalClasses > 0 ? 
+            Math.round((presentCount / totalClasses) * 100) : 0;
+          
+          // Update UI with stats
+          updateStatsUI(attendanceRate, absenceCount, lateCount, earlyCount);
+        })
+        .catch((error) => {
+          console.error("Error loading attendance stats:", error);
+          updateStatsUI(0, 0, 0, 0);
+        });
+    }
+    
+    // Update statistics UI
+    function updateStatsUI(attendanceRate, absenceCount, lateCount, earlyCount) {
+      document.getElementById('attendance-rate').textContent = `${attendanceRate}%`;
+      document.getElementById('absence-count').textContent = absenceCount;
+      document.getElementById('late-count').textContent = lateCount;
+      document.getElementById('early-count').textContent = earlyCount;
+    }
+    
+    // Load enrolled courses
+    function loadEnrolledCourses(userId) {
+      // This would typically come from your Firebase database
+      console.log("Loading enrolled courses for user:", userId);
+      
+      // For the demo, the courses are already in the HTML
+      // In a real implementation, you would fetch this from Firebase
+    }
+    
+    // Show notification
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = 'fixed bottom-4 right-4 rounded-md shadow-lg p-4 max-w-md transform transition-all duration-300 ease-in-out translate-y-0 z-50';
+      
+      // Set background color based on type
+      switch(type) {
+        case 'success':
+          notification.classList.add('bg-green-500', 'text-white');
+          break;
+        case 'error':
+          notification.classList.add('bg-red-500', 'text-white');
+          break;
+        case 'warning':
+          notification.classList.add('bg-yellow-500', 'text-white');
+          break;
+        default:
+          notification.classList.add('bg-blue-500', 'text-white');
+          break;
+      }
+      
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info'}</span>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium">${message}</p>
+          </div>
+          <div class="ml-auto pl-3">
+            <button type="button" class="inline-flex text-white focus:outline-none">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Add to document
+      document.body.appendChild(notification);
+      
+      // Set up close button
+      notification.querySelector('button').addEventListener('click', () => {
+        notification.classList.add('opacity-0', '-translate-y-4');
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      });
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        notification.classList.add('opacity-0', '-translate-y-4');
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 5000);
+    }
+    
+    // Initialize page when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("Account page loaded");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings - RFID Attendance System</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="fst.png">
+  <!-- Google Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="menu.css">
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <!-- Sliding Menu -->
+  <div class="menu">
+    <ul class="menu-content">
+      <li><a href="home1.html"><span class="material-symbols-outlined">home</span><span>Home</span></a></li>
+      <li><a href="dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a></li>
+      <li><a href="explore.html"><span class="material-symbols-outlined">explore</span><span>Explore</span></a></li>
+      <li><a href="analytics.html"><span class="material-symbols-outlined">analytics</span><span>Analytics</span></a></li>
+      <li><a href="settings.html" class="active"><span class="material-symbols-outlined">settings</span><span>Settings</span></a></li>
+      <li><a href="profile.html"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
+      <li><a href="report.html"><span class="material-symbols-outlined">report</span><span>Report</span></a></li>
+      <li><a href="contact.html"><span class="material-symbols-outlined">email</span><span>Contact</span></a></li>
+      <li><a href="#" id="menu-logout"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="bg-white dark:bg-gray-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <img class="h-8 w-auto" src="fst.png" alt="Logo">
+            <span class="ml-2 text-xl font-bold text-gray-800 dark:text-white">RFID Attendance System</span>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="relative ml-3">
+            <div>
+              <button id="user-menu-btn" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <span class="sr-only">Open user menu</span>
+                <img id="user-avatar" class="h-8 w-8 rounded-full object-cover" src="fst.png" alt="User avatar">
+              </button>
+            </div>
+            <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+              <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                <p id="menu-user-name" class="text-sm font-medium text-gray-900 dark:text-white">John Smith</p>
+                <p id="menu-user-email" class="text-xs text-gray-500 dark:text-gray-400">john.smith@example.com</p>
+                <span id="menu-user-role" class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Student</span>
+              </div>
+              <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
+              <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+      </div>
+
+      <!-- Settings Navigation -->
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg mb-6">
+        <div class="border-b border-gray-200 dark:border-gray-700">
+          <nav class="flex">
+            <button class="settings-tab px-6 py-4 text-sm font-medium text-blue-600 dark:text-blue-400 border-b-2 border-blue-500" data-tab="account">
+              <span class="material-symbols-outlined align-middle mr-1">person</span> Account
+            </button>
+            <button class="settings-tab px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-tab="notifications">
+              <span class="material-symbols-outlined align-middle mr-1">notifications</span> Notifications
+            </button>
+            <button class="settings-tab px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-tab="appearance">
+              <span class="material-symbols-outlined align-middle mr-1">palette</span> Appearance
+            </button>
+            <button class="settings-tab px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-tab="privacy">
+              <span class="material-symbols-outlined align-middle mr-1">shield</span> Privacy
+            </button>
+          </nav>
+        </div>
+
+        <!-- Account Settings Tab -->
+        <div id="account-tab" class="settings-content p-6">
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Personal Information</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Update your account information.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label for="first-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">First name</label>
+                <input type="text" name="first-name" id="first-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              </div>
+
+              <div>
+                <label for="last-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name</label>
+                <input type="text" name="last-name" id="last-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
+                <input type="email" name="email" id="email" disabled class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm bg-gray-50 dark:bg-gray-600 sm:text-sm dark:text-gray-300">
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Contact administration to change your email address.</p>
+              </div>
+
+              <div>
+                <label for="student-id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Student ID</label>
+                <input type="text" name="student-id" id="student-id" disabled class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm bg-gray-50 dark:bg-gray-600 sm:text-sm dark:text-gray-300">
+              </div>
+            </div>
+
+            <div class="pt-5">
+              <div class="flex justify-end">
+                <button type="button" id="save-profile" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Change Password</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Ensure your account is using a secure password.</p>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+              <div>
+                <label for="current-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current password</label>
+                <input type="password" name="current-password" id="current-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              </div>
+
+              <div class="sm:col-span-2"></div>
+
+              <div>
+                <label for="new-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New password</label>
+                <input type="password" name="new-password" id="new-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              </div>
+
+              <div>
+                <label for="confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm new password</label>
+                <input type="password" name="confirm-password" id="confirm-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              </div>
+            </div>
+
+            <div class="pt-5">
+              <div class="flex justify-end">
+                <button type="button" id="change-password-btn" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Change password
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-lg font-medium text-red-600 dark:text-red-400">Danger Zone</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Permanently delete your account and all of your data.</p>
+            </div>
+
+            <div class="mt-6">
+              <button type="button" id="delete-account-btn" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Delete account
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Settings Tab -->
+        <div id="notifications-tab" class="settings-content p-6 hidden">
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Notification Preferences</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage how you receive notifications.</p>
+            </div>
+
+            <div class="mt-6">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Email notifications</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Receive email notifications about your attendance.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="email-notifications" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Attendance alerts</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when your attendance falls below threshold.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="attendance-alerts" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Schedule changes</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Be notified when your class schedule changes.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="schedule-changes" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">System announcements</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications about system updates.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="system-announcements">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-5">
+                <div class="flex justify-end">
+                  <button type="button" id="save-notifications" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Save preferences
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appearance Settings Tab -->
+        <div id="appearance-tab" class="settings-content p-6 hidden">
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Appearance Settings</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Customize the look and feel of the application.</p>
+            </div>
+
+            <div class="mt-6">
+              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Theme</h4>
+              <div class="flex space-x-4">
+                <div class="theme-option" data-theme="light">
+                  <button class="w-20 h-20 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="h-4 bg-blue-500 rounded-t-sm"></div>
+                    <div class="p-2">
+                      <div class="h-2 bg-gray-200 rounded mb-1"></div>
+                      <div class="h-2 bg-gray-200 rounded mb-1"></div>
+                      <div class="h-2 bg-gray-200 rounded"></div>
+                    </div>
+                  </button>
+                  <p class="text-sm text-center mt-2 text-gray-700 dark:text-gray-300">Light</p>
+                </div>
+                <div class="theme-option" data-theme="dark">
+                  <button class="w-20 h-20 bg-gray-800 border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="h-4 bg-blue-600 rounded-t-sm"></div>
+                    <div class="p-2">
+                      <div class="h-2 bg-gray-600 rounded mb-1"></div>
+                      <div class="h-2 bg-gray-600 rounded mb-1"></div>
+                      <div class="h-2 bg-gray-600 rounded"></div>
+                    </div>
+                  </button>
+                  <p class="text-sm text-center mt-2 text-gray-700 dark:text-gray-300">Dark</p>
+                </div>
+                <div class="theme-option" data-theme="system">
+                  <button class="w-20 h-20 bg-gradient-to-r from-white to-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-sm"></div>
+                    <div class="p-2 flex">
+                      <div class="w-1/2 pr-1">
+                        <div class="h-2 bg-gray-200 rounded mb-1"></div>
+                        <div class="h-2 bg-gray-200 rounded"></div>
+                      </div>
+                      <div class="w-1/2 pl-1">
+                        <div class="h-2 bg-gray-600 rounded mb-1"></div>
+                        <div class="h-2 bg-gray-600 rounded"></div>
+                      </div>
+                    </div>
+                  </button>
+                  <p class="text-sm text-center mt-2 text-gray-700 dark:text-gray-300">System</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Font Size</h4>
+              <div class="grid grid-cols-4 gap-4">
+                <button class="font-size-option p-3 text-sm border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none" data-size="sm">
+                  <p class="text-xs text-gray-700 dark:text-gray-300">Small</p>
+                </button>
+                <button class="font-size-option p-3 text-sm border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none active" data-size="md">
+                  <p class="text-sm text-gray-700 dark:text-gray-300">Medium</p>
+                </button>
+                <button class="font-size-option p-3 text-sm border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none" data-size="lg">
+                  <p class="text-base text-gray-700 dark:text-gray-300">Large</p>
+                </button>
+                <button class="font-size-option p-3 text-sm border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none" data-size="xl">
+                  <p class="text-lg text-gray-700 dark:text-gray-300">Extra Large</p>
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-5">
+              <div class="flex justify-end">
+                <button type="button" id="save-appearance" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Save preferences
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy Settings Tab -->
+        <div id="privacy-tab" class="settings-content p-6 hidden">
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Privacy Settings</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your data and privacy preferences.</p>
+            </div>
+
+            <div class="mt-6">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Data sharing</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Allow the institution to use your attendance data for analytics.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="data-sharing" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Location services</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Allow the app to use your location to verify attendance.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="location-services">
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white">Device identification</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Allow the app to remember your devices for security.</p>
+                  </div>
+                  <div class="flex items-center">
+                    <label class="switch">
+                      <input type="checkbox" id="device-identification" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Your Data</h4>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Download or delete your attendance data.</p>
+                
+                <div class="mt-4 flex space-x-4">
+                  <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <span class="material-symbols-outlined mr-2">download</span>
+                    Download your data
+                  </button>
+                  
+                  <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <span class="material-symbols-outlined mr-2">delete</span>
+                    Delete your data
+                  </button>
+                </div>
+              </div>
+
+              <div class="pt-5 mt-6">
+                <div class="flex justify-end">
+                  <button type="button" id="save-privacy" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Save preferences
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>
