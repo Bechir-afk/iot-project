@@ -1,7 +1,7 @@
 // Firebase configuration
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -64,30 +64,62 @@ document.addEventListener('DOMContentLoaded', () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          showNotification(`Welcome back, ${user.email}!`, "success");
-          
-          // Store login success info for home page to display
-          sessionStorage.setItem('loginSuccess', 'true');
-          sessionStorage.setItem('loginEmail', user.email);
-          sessionStorage.setItem('loginTime', new Date().toISOString());
-          
-          console.log("Redirecting to:", "home1.html");
-          // Give more time to see the success message
-          setTimeout(() => {
-            window.location.href = "home1.html";
-          }, 1500);
+
+          // Fetch user role from Firestore
+          const userDocRef = doc(db, "users", user.uid);
+          getDoc(userDocRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              const role = userData.role;
+
+              // Redirect based on role
+              if (role === "admin") {
+                window.location.href = "admin-management.html";
+              } else if (role === "teacher") {
+                window.location.href = "dashboard.html";
+              } else {
+                window.location.href = "home1.html";
+              }
+            } else {
+              alert("No role assigned to this user.");
+            }
+          });
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
-          if (errorCode === "auth/wrong-password") {
-            showNotification("Incorrect password.", "error");
-          } else if (errorCode === "auth/user-not-found") {
-            showNotification("User not found.", "error");
-          } else {
-            showNotification(`Login failed: ${errorMessage}`, "error");
-          }
+          console.log("Firebase Auth login failed, checking Firestore...");
+          // If Firebase Auth login fails, check Firestore
+          // Need to use compat API since that's what admin-management is using
+          firebase.firestore().collection("users")
+            .where("email", "==", email)
+            .where("password", "==", password)
+            .get()
+            .then((snapshot) => {
+              if (!snapshot.empty) {
+                // Login successful via Firestore
+                const userData = snapshot.docs[0].data();
+                sessionStorage.setItem('userId', snapshot.docs[0].id);
+                sessionStorage.setItem('userRole', userData.role);
+                sessionStorage.setItem('userEmail', userData.email);
+                
+                // Redirect based on role
+                if (userData.role === "student") {
+                  window.location.href = "home1.html";
+                } else if (userData.role === "admin") {
+                  window.location.href = "admin-management.html";
+                } else if (userData.role === "teacher") {
+                  window.location.href = "dashboard.html";
+                } else {
+                  window.location.href = "home1.html";  // Default fallback
+                }
+              } else {
+                // No matching user found
+                alert("Login failed. Please check your credentials.");
+              }
+            })
+            .catch(err => {
+              console.error("Firestore check failed:", err);
+              alert("Login failed. Please check your credentials.");
+            });
         });
     });
   }
@@ -123,156 +155,156 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Password Reveal Animation - Move all animation code inside DOMContentLoaded
   if (typeof gsap !== 'undefined' && gsap.registerPlugin) {
-    gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
-    
-    const BLINK_SPEED = 0.075;
-    const TOGGLE_SPEED = 0.125;
-    const ENCRYPT_SPEED = 1;
-    
-    let busy = false;
-    
-    const EYE = document.querySelector('.eye');
-    const TOGGLE = document.querySelector('button');
-    const INPUT = document.querySelector('#login-password');
-    const PROXY = document.createElement('div');
-    
-    // Make sure all required elements exist
-    if (EYE && TOGGLE && INPUT) {
-      const chars =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
+      gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
       
-      let blinkTl;
-      const BLINK = () => {
-        const delay = gsap.utils.random(2, 8);
-        const duration = BLINK_SPEED;
-        const repeat = Math.random() > 0.5 ? 3 : 1;
-        blinkTl = gsap.timeline({
-          delay,
-          onComplete: () => BLINK(),
-          repeat,
-          yoyo: true
+      const BLINK_SPEED = 0.075;
+      const TOGGLE_SPEED = 0.125;
+      const ENCRYPT_SPEED = 1;
+      
+      let busy = false;
+      
+      const EYE = document.querySelector('.eye');
+    const TOGGLE = document.querySelector('button');
+      const INPUT = document.querySelector('#login-password');
+      const PROXY = document.createElement('div');
+      
+      // Make sure all required elements exist
+      if (EYE && TOGGLE && INPUT) {
+        const chars =
+          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
+        
+        let blinkTl;
+        const BLINK = () => {
+          const delay = gsap.utils.random(2, 8);
+          const duration = BLINK_SPEED;
+          const repeat = Math.random() > 0.5 ? 3 : 1;
+          blinkTl = gsap.timeline({
+            delay,
+            onComplete: () => BLINK(),
+            repeat,
+            yoyo: true
         }).
           to('.lid--upper', {
-            morphSVG: '.lid--lower',
-            duration
-          }).
-          to('#eye-open path', {
-            morphSVG: '#eye-closed path',
-            duration
-          },
-            0);
-      };
-      
-      BLINK();
-      
-      const posMapper = gsap.utils.mapRange(-100, 100, 30, -30);
-      let reset;
-      
-      const MOVE_EYE = ({ x, y }) => {
-        if (reset) reset.kill();
-        reset = gsap.delayedCall(2, () => {
-          gsap.to('.eye', { xPercent: 0, yPercent: 0, duration: 0.2 });
-        });
-        const BOUNDS = EYE.getBoundingClientRect();
-        gsap.set('.eye', {
-          xPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.x - x)),
-          yPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.y - y))
-        });
-      };
-      
-      window.addEventListener('pointermove', MOVE_EYE);
-      
-      TOGGLE.addEventListener('click', () => {
-        if (busy) return;
-        const isText = INPUT.matches('[type=password]');
-        const val = INPUT.value;
-        busy = true;
-        TOGGLE.setAttribute('aria-pressed', isText);
-        const duration = TOGGLE_SPEED;
-      
-        if (isText) {
-          if (blinkTl) blinkTl.kill();
-      
-          gsap.timeline({
-            onComplete: () => {
-              busy = false;
-            }
-          })
-            .to('.lid--upper', {
               morphSVG: '.lid--lower',
               duration
-            }).
-            to('#eye-open path', {
+          }).
+          to('#eye-open path', {
               morphSVG: '#eye-closed path',
               duration
-            },
-              0)
-            .to(PROXY, {
-              duration: ENCRYPT_SPEED,
-              onStart: () => {
-                INPUT.type = 'text';
-              },
+          },
+            0);
+        };
+        
+        BLINK();
+        
+        const posMapper = gsap.utils.mapRange(-100, 100, 30, -30);
+        let reset;
+        
+        const MOVE_EYE = ({ x, y }) => {
+          if (reset) reset.kill();
+          reset = gsap.delayedCall(2, () => {
+            gsap.to('.eye', { xPercent: 0, yPercent: 0, duration: 0.2 });
+          });
+          const BOUNDS = EYE.getBoundingClientRect();
+          gsap.set('.eye', {
+            xPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.x - x)),
+            yPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.y - y))
+          });
+        };
+        
+        window.addEventListener('pointermove', MOVE_EYE);
+        
+        TOGGLE.addEventListener('click', () => {
+          if (busy) return;
+          const isText = INPUT.matches('[type=password]');
+          const val = INPUT.value;
+          busy = true;
+          TOGGLE.setAttribute('aria-pressed', isText);
+          const duration = TOGGLE_SPEED;
+        
+          if (isText) {
+            if (blinkTl) blinkTl.kill();
+        
+            gsap.timeline({
               onComplete: () => {
-                PROXY.innerHTML = '';
-                INPUT.value = val;
-              },
-              scrambleText: {
-                chars,
-                text:
-                  INPUT.value.charAt(INPUT.value.length - 1) === ' ' ?
-                    `${INPUT.value.slice(0, INPUT.value.length - 1)}${chars.charAt(
-                      Math.floor(Math.random() * chars.length))
-                    }` :
-                    INPUT.value
-              },
-              onUpdate: () => {
-                const len = val.length - PROXY.innerText.length;
-                INPUT.value = `${PROXY.innerText}${new Array(len).fill('•').join('')}`;
+                busy = false;
               }
-            },
-              0);
-        } else {
-          gsap.timeline({
-            onComplete: () => {
-              BLINK();
-              busy = false;
-            }
-          }).
-            to('.lid--upper', {
-              morphSVG: '.lid--upper',
-              duration
+            })
+              .to('.lid--upper', {
+                morphSVG: '.lid--lower',
+                duration
             }).
             to('#eye-open path', {
-              morphSVG: '#eye-open path',
-              duration
+                morphSVG: '#eye-closed path',
+                duration
+            },
+              0)
+              .to(PROXY, {
+                duration: ENCRYPT_SPEED,
+                onStart: () => {
+                  INPUT.type = 'text';
+                },
+                onComplete: () => {
+                  PROXY.innerHTML = '';
+                  INPUT.value = val;
+                },
+                scrambleText: {
+                  chars,
+                  text:
+                    INPUT.value.charAt(INPUT.value.length - 1) === ' ' ?
+                      `${INPUT.value.slice(0, INPUT.value.length - 1)}${chars.charAt(
+                        Math.floor(Math.random() * chars.length))
+                      }` :
+                      INPUT.value
+                },
+                onUpdate: () => {
+                  const len = val.length - PROXY.innerText.length;
+                  INPUT.value = `${PROXY.innerText}${new Array(len).fill('•').join('')}`;
+                }
+            },
+              0);
+          } else {
+            gsap.timeline({
+              onComplete: () => {
+                BLINK();
+                busy = false;
+              }
+          }).
+            to('.lid--upper', {
+                morphSVG: '.lid--upper',
+                duration
+            }).
+            to('#eye-open path', {
+                morphSVG: '#eye-open path',
+                duration
             },
               0).
             to(PROXY, {
-              duration: ENCRYPT_SPEED,
-              onComplete: () => {
-                INPUT.type = 'password';
-                INPUT.value = val;
-                PROXY.innerHTML = '';
-              },
-              scrambleText: {
-                chars,
-                text: new Array(INPUT.value.length).fill('•').join('')
-              },
-              onUpdate: () => {
-                INPUT.value = `${PROXY.innerText}${val.slice(
-                  PROXY.innerText.length,
+                duration: ENCRYPT_SPEED,
+                onComplete: () => {
+                  INPUT.type = 'password';
+                  INPUT.value = val;
+                  PROXY.innerHTML = '';
+                },
+                scrambleText: {
+                  chars,
+                  text: new Array(INPUT.value.length).fill('•').join('')
+                },
+                onUpdate: () => {
+                  INPUT.value = `${PROXY.innerText}${val.slice(
+                    PROXY.innerText.length,
                   val.length)
                   }`;
-              }
+                }
             },
               0);
-        }
-      });
-    }
-    
-    const FORM = document.querySelector('form');
-    if (FORM) {
-      FORM.addEventListener('submit', event => event.preventDefault());
+          }
+        });
+      }
+      
+      const FORM = document.querySelector('form');
+      if (FORM) {
+        FORM.addEventListener('submit', event => event.preventDefault());
     }
   }
 });

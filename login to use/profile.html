@@ -23,14 +23,15 @@
   <!-- Sliding Menu -->
   <div class="menu">
     <ul class="menu-content">
-      <li><a href="home1.html"><span class="material-symbols-outlined">home</span><span>home</span></a></li>
-      <li><a href="dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>DashBoard</span></a></li>
+      <li><a href="home1.html"><span class="material-symbols-outlined">home</span><span>Home</span></a></li>
+      <li><a href="dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a></li>
       <li><a href="explore.html"><span class="material-symbols-outlined">explore</span><span>Explore</span></a></li>
       <li><a href="analytics.html"><span class="material-symbols-outlined">analytics</span><span>Analytics</span></a></li>
       <li><a href="settings.html"><span class="material-symbols-outlined">settings</span><span>Settings</span></a></li>
-      <li><a href="account.html" class="active"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
+      <li><a href="profile.html"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
       <li><a href="report.html"><span class="material-symbols-outlined">report</span><span>Report</span></a></li>
       <li><a href="contact.html"><span class="material-symbols-outlined">email</span><span>Contact</span></a></li>
+      <li><a href="admin-management.html" class="active"><span class="material-symbols-outlined">admin_panel_settings</span><span>Admin Management</span></a></li>
       <li><a href="#" id="menu-logout"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></li>
     </ul>
   </div>
@@ -84,7 +85,7 @@
           </div>
           <div>
             <button id="edit-profile-btn" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              <span class="material-symbols-outlined mr-2">edit</span>
+              <span class="material-symbols-outlined mr-1">edit</span>
               Edit Profile
             </button>
           </div>
@@ -417,55 +418,96 @@
         </button>
       </div>
       <div class="px-6 py-4">
-        <form id="edit-profile-form">
+        <form id="edit-profile-form" class="space-y-4">
           <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+            <!-- Basic Information -->
             <div>
               <label for="edit-first-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">First name</label>
-              <input type="text" name="first-name" id="edit-first-name" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              <input type="text" id="edit-first-name" name="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
-
+            
             <div>
               <label for="edit-last-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name</label>
-              <input type="text" name="last-name" id="edit-last-name" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              <input type="text" id="edit-last-name" name="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
-
+            
+            <div>
+              <label for="edit-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
+              <input type="email" id="edit-email" name="email" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-gray-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-400">
+              <p class="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+            </div>
+            
+            <div>
+              <label for="edit-student-id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Student ID</label>
+              <input type="text" id="edit-student-id" name="student-id" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-gray-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-400">
+              <p class="mt-1 text-xs text-gray-500">ID cannot be changed</p>
+            </div>
+            
+            <div>
+              <label for="edit-rfid" class="block text-sm font-medium text-gray-700 dark:text-gray-300">RFID Card Number</label>
+              <input type="text" id="edit-rfid" name="rfid" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-gray-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-400">
+              <p class="mt-1 text-xs text-gray-500">RFID can only be updated by administrators</p>
+            </div>
+            
             <div>
               <label for="edit-dob" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date of Birth</label>
-              <input type="date" name="dob" id="edit-dob" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              <input type="date" id="edit-dob" name="dob" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
-
+            
             <div>
               <label for="edit-gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gender</label>
-              <select id="edit-gender" name="gender" class="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:text-white">
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-                <option value="prefer-not-to-say">Prefer not to say</option>
+              <select id="edit-gender" name="gender" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
               </select>
             </div>
-
-            <div>
-              <label for="edit-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
-              <input type="tel" name="phone" id="edit-phone" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
-            </div>
-
+            
+            <!-- Academic Information -->
             <div>
               <label for="edit-department" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
-              <input type="text" name="department" id="edit-department" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              <input type="text" id="edit-department" name="department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
-
+            
+            <div>
+              <label for="edit-year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Year</label>
+              <select id="edit-year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="5th Year">5th Year</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="edit-program" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Program</label>
+              <input type="text" id="edit-program" name="program" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            
+            <div>
+              <label for="edit-semester" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Semester</label>
+              <input type="text" id="edit-semester" name="semester" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            
+            <!-- Contact Information -->
+            <div>
+              <label for="edit-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
+              <input type="tel" id="edit-phone" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            
             <div class="sm:col-span-2">
               <label for="edit-address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
-              <input type="text" name="address" id="edit-address" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white">
+              <textarea id="edit-address" name="address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
             </div>
           </div>
 
           <div class="mt-6 flex justify-end space-x-3">
-            <button type="button" id="cancel-edit-btn" class="inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <button type="button" id="cancel-edit-btn" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600">
               Cancel
             </button>
-            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               Save Changes
             </button>
           </div>
@@ -643,21 +685,54 @@
             if (doc.exists) {
               const userData = doc.data();
               
-              // Populate form fields
+              // Basic Information
               document.getElementById('edit-first-name').value = userData.firstName || '';
               document.getElementById('edit-last-name').value = userData.lastName || '';
+              document.getElementById('edit-email').value = userData.email || '';
+              document.getElementById('edit-student-id').value = userData.studentId || '';
+              document.getElementById('edit-rfid').value = userData.rfid || '';
               document.getElementById('edit-dob').value = userData.dob || '';
-              document.getElementById('edit-gender').value = userData.gender || '';
-              document.getElementById('edit-phone').value = userData.phone || '';
+              
+              // Set gender if available
+              const genderSelect = document.getElementById('edit-gender');
+              if (userData.gender && genderSelect) {
+                for (let i = 0; i < genderSelect.options.length; i++) {
+                  if (genderSelect.options[i].value === userData.gender) {
+                    genderSelect.selectedIndex = i;
+                    break;
+                  }
+                }
+              }
+              
+              // Academic Information
               document.getElementById('edit-department').value = userData.department || '';
+              
+              // Set year if available
+              const yearSelect = document.getElementById('edit-year');
+              if (userData.year && yearSelect) {
+                for (let i = 0; i < yearSelect.options.length; i++) {
+                  if (yearSelect.options[i].value === userData.year) {
+                    yearSelect.selectedIndex = i;
+                    break;
+                  }
+                }
+              }
+              
+              document.getElementById('edit-program').value = userData.program || '';
+              document.getElementById('edit-semester').value = userData.semester || '';
+              
+              // Contact Information
+              document.getElementById('edit-phone').value = userData.phone || '';
               document.getElementById('edit-address').value = userData.address || '';
               
               // Show the modal
               editProfileModal.classList.remove('hidden');
+            } else {
+              showNotification('User profile not found', 'error');
             }
           })
           .catch((error) => {
-            console.error('Error getting user data:', error);
+            console.error('Error loading profile data:', error);
             showNotification('Error loading profile data', 'error');
           });
       });
@@ -684,102 +759,98 @@
     });
     
     // Edit profile form submission
-    if (editProfileForm) {
-      editProfileForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const user = auth.currentUser;
-        if (!user) return;
-        
-        // Get form values
-        const firstName = document.getElementById('edit-first-name').value.trim();
-        const lastName = document.getElementById('edit-last-name').value.trim();
-        const dob = document.getElementById('edit-dob').value;
-        const gender = document.getElementById('edit-gender').value;
-        const phone = document.getElementById('edit-phone').value.trim();
-        const department = document.getElementById('edit-department').value.trim();
-        const address = document.getElementById('edit-address').value.trim();
-        
-        // Create updated user data object
-        const updatedData = {
-          firstName,
-          lastName,
-          dob,
-          gender,
-          phone,
-          department,
-          address,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Update user data in Firestore
-        db.collection('users').doc(user.uid).update(updatedData)
-          .then(() => {
-            // Close the modal
-            editProfileModal.classList.add('hidden');
-            
-            // Show success notification
-            showNotification('Profile updated successfully', 'success');
-            
-            // Update UI with new data
-            loadUserProfile(user.uid);
-          })
-          .catch((error) => {
-            console.error('Error updating profile:', error);
-            showNotification('Error updating profile', 'error');
-          });
-      });
-    }
+    editProfileForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const firstName = document.getElementById('edit-first-name').value.trim();
+      const lastName = document.getElementById('edit-last-name').value.trim();
+      
+      if (!firstName || !lastName) {
+        showNotification('First name and last name are required', 'error');
+        return;
+      }
+      
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      // Create updated user data object
+      const updatedData = {
+        firstName: firstName,
+        lastName: lastName,
+        name: `${firstName} ${lastName}`,
+        dob: document.getElementById('edit-dob').value || '',
+        gender: document.getElementById('edit-gender').value || '',
+        department: document.getElementById('edit-department').value || '',
+        year: document.getElementById('edit-year').value || '',
+        program: document.getElementById('edit-program').value || '',
+        semester: document.getElementById('edit-semester').value || '',
+        phone: document.getElementById('edit-phone').value || '',
+        address: document.getElementById('edit-address').value || '',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      // Update the user document in Firestore
+      db.collection('users').doc(user.uid).update(updatedData)
+        .then(() => {
+          showNotification('Profile updated successfully', 'success');
+          editProfileModal.classList.add('hidden');
+          
+          // Reload profile data to show changes
+          loadUserProfile(user.uid);
+        })
+        .catch((error) => {
+          console.error('Error updating profile:', error);
+          showNotification('Error updating profile: ' + error.message, 'error');
+        });
+    });
     
-    // Load user profile data
+    // Updated loadUserProfile function
     function loadUserProfile(userId) {
       db.collection('users').doc(userId).get()
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
             
-            // Update profile page with user data
+            // Update profile name and header
             const fullName = userData.firstName && userData.lastName ? 
-              `${userData.firstName} ${userData.lastName}` : 'No Name Set';
+              `${userData.firstName} ${userData.lastName}` : (userData.name || 'User');
             
-            // Update name display
-            document.getElementById('menu-user-name').textContent = fullName;
+            // Update displayed name and email
             document.getElementById('profile-name').textContent = fullName;
+            document.getElementById('profile-email').textContent = userData.email || '';
+            document.getElementById('profile-contact-email').textContent = userData.email || '';
             
-            // Update user role if available
-            if (userData.role) {
-              document.getElementById('menu-user-role').textContent = userData.role;
-              document.getElementById('profile-role').textContent = userData.role;
-            }
+            // Update role badge
+            document.getElementById('profile-role').textContent = userData.role || 'Student';
             
-            // Update profile image if available
-            if (userData.profileImage) {
-              document.getElementById('user-avatar').src = userData.profileImage;
-              document.getElementById('profile-image').src = userData.profileImage;
-            }
+            // Update basic information
+            document.getElementById('profile-first-name').textContent = userData.firstName || '';
+            document.getElementById('profile-last-name').textContent = userData.lastName || '';
+            document.getElementById('profile-student-id').textContent = userData.studentId || '';
+            document.getElementById('profile-rfid').textContent = userData.rfid || 'Not assigned';
+            document.getElementById('profile-dob').textContent = userData.dob || '';
+            document.getElementById('profile-gender').textContent = userData.gender || '';
             
-            // Update other profile fields
-            document.getElementById('profile-first-name').textContent = userData.firstName || 'Not set';
-            document.getElementById('profile-last-name').textContent = userData.lastName || 'Not set';
-            document.getElementById('profile-student-id').textContent = userData.studentId || 'Not set';
-            document.getElementById('profile-rfid').textContent = userData.rfidTag || 'Not set';
-            document.getElementById('profile-dob').textContent = userData.dob || 'Not set';
-            document.getElementById('profile-gender').textContent = userData.gender || 'Not set';
-            document.getElementById('profile-department').textContent = userData.department || 'Not set';
-            document.getElementById('profile-year').textContent = userData.year || 'Not set';
-            document.getElementById('profile-program').textContent = userData.program || 'Not set';
-            document.getElementById('profile-semester').textContent = userData.semester || 'Not set';
-            document.getElementById('profile-phone').textContent = userData.phone || 'Not set';
-            document.getElementById('profile-address').textContent = userData.address || 'Not set';
+            // Update academic information
+            document.getElementById('profile-department').textContent = userData.department || '';
+            document.getElementById('profile-year').textContent = userData.year || '';
+            document.getElementById('profile-program').textContent = userData.program || '';
+            document.getElementById('profile-semester').textContent = userData.semester || '';
             
-            // Format and display join date
+            // Update contact information
+            document.getElementById('profile-phone').textContent = userData.phone || '';
+            document.getElementById('profile-address').textContent = userData.address || '';
+            
+            // Update join date if available
             if (userData.createdAt) {
               const joinDate = userData.createdAt.toDate();
-              const formattedDate = joinDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-              document.getElementById('profile-joined-date').textContent = formattedDate;
+              document.getElementById('profile-joined-date').textContent = joinDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short'
+              });
             }
           } else {
-            console.log("No user data found!");
+            console.log("No user data found");
           }
         })
         .catch((error) => {

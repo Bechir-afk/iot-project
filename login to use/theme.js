@@ -2,8 +2,17 @@
 
 // Function to apply theme across the application
 function applyTheme(theme) {
-  // First, remove any existing theme-related classes
+  // First, remove any existing theme-related classes from documentElement
   document.documentElement.classList.remove('dark', 'light', 'system-theme');
+  
+  // Check if document.body exists before trying to access it
+  if (!document.body) {
+    console.log("Body not available yet, will apply theme when DOM is ready");
+    document.addEventListener('DOMContentLoaded', () => applyTheme(theme));
+    return;
+  }
+  
+  // Now it's safe to manipulate document.body
   document.body.classList.remove('dark-theme', 'light-theme');
   
   console.log(`Applying theme: ${theme}`);
@@ -66,19 +75,28 @@ function applyFontSize(size) {
   document.body.classList.add(`font-${size}`);
 }
 
-// Initialize theme as early as possible
+// Update the initialization function
 (function initTheme() {
   // Get user's saved preferences from localStorage
   const userTheme = localStorage.getItem('theme') || 'system';
   const userFontSize = localStorage.getItem('fontSize') || 'md';
   
-  // Apply saved preferences
-  applyTheme(userTheme);
-  applyFontSize(userFontSize);
-  
   // Make functions available globally
   window.applyTheme = applyTheme;
   window.applyFontSize = applyFontSize;
+
+  // Check if DOM is ready
+  if (document.readyState === 'loading') {
+    // If DOM is not ready, wait for it
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTheme(userTheme);
+      applyFontSize(userFontSize);
+    });
+  } else {
+    // DOM is already ready, apply theme immediately
+    applyTheme(userTheme);
+    applyFontSize(userFontSize);
+  }
 })();
 
 // Add event listener for when DOM is fully loaded
