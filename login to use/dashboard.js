@@ -26,6 +26,9 @@ const firebaseConfig = {
   const userAvatar = document.getElementById('user-avatar');
   let logoutBtn, menuLogout;
   
+  // Add this after the other DOM Elements
+  const autoScanButton = document.getElementById('auto-scan-button');
+  
   // Status elements
   const statusNotClocked = document.getElementById('status-not-clocked');
   const statusClockedIn = document.getElementById('status-clocked-in');
@@ -60,6 +63,7 @@ const firebaseConfig = {
   let totalLateMinutes = 0;
   let attendanceCount = 0;
   let attendanceTotal = 0;
+  let assignedRfid = null;
   
   // Utility Functions
   function formatTime(date) {
@@ -112,16 +116,38 @@ const firebaseConfig = {
       // Update user info in dropdown
       menuUserEmail.textContent = user.email;
       
-      // Get user profile from Firestore
+      // Get user profile from Firestore and retrieve assigned RFID
       db.collection('users').doc(user.uid).get()
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
-            const fullName = userData.firstName && userData.lastName ? 
-              `${userData.firstName} ${userData.lastName}` : user.displayName || user.email;
             
-            menuUserName.textContent = fullName;
-            menuUserRole.textContent = userData.role || 'Student';
+            // Store the assigned RFID
+            assignedRfid = userData.rfid;
+            console.log("Assigned RFID:", assignedRfid);
+            
+            // Update the auto-scan button based on RFID availability
+            if (autoScanButton) {
+              if (assignedRfid) {
+                autoScanButton.disabled = false;
+                autoScanButton.title = "Click to use your assigned RFID: " + assignedRfid;
+              } else {
+                autoScanButton.disabled = true;
+                autoScanButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                autoScanButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                autoScanButton.title = "No RFID assigned to your account";
+              }
+            }
+            
+            // Display user info
+            if (userData.name) {
+              menuUserName.textContent = userData.name;
+            }
+            
+            if (userData.role) {
+              menuUserRole.textContent = userData.role.charAt(0).toUpperCase() + userData.role.slice(1);
+              menuUserRole.className = `mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200`;
+            }
             
             if (userData.profileImage) {
               userAvatar.src = userData.profileImage;
@@ -445,6 +471,23 @@ const firebaseConfig = {
       return;
     }
     
+    // Check if the scanned RFID matches the assigned RFID
+    if (assignedRfid && rfidTag !== assignedRfid) {
+      scanLog.textContent = `Error: The scanned RFID (${rfidTag}) does not match your assigned RFID tag.`;
+      
+      // Add visual feedback - flash the scan area red
+      const scannerArea = document.querySelector('.mt-6.bg-gray-50');
+      scannerArea.classList.add('bg-red-50', 'dark:bg-red-900/20');
+      scannerArea.classList.remove('bg-gray-50', 'dark:bg-gray-700/50');
+      
+      setTimeout(() => {
+        scannerArea.classList.remove('bg-red-50', 'dark:bg-red-900/20');
+        scannerArea.classList.add('bg-gray-50', 'dark:bg-gray-700/50');
+      }, 2000);
+      
+      return;
+    }
+    
     const today = new Date().toLocaleDateString();
     
     // Check if already clocked in/out today
@@ -462,14 +505,11 @@ const firebaseConfig = {
           const attendanceData = querySnapshot.docs[0].data();
           
           if (attendanceData.clockInTime && !attendanceData.clockOutTime) {
-            // Clocked in but not out, so clock out
+            // Clocked in but not clocked out, so clock out
             clockOut(rfidTag);
           } else if (attendanceData.clockInTime && attendanceData.clockOutTime) {
             // Already clocked in and out
             scanLog.textContent = 'You have already completed your attendance for today.';
-          } else {
-            // Strange state - reset to clock in
-            clockIn(rfidTag);
           }
         }
       })
@@ -746,37 +786,87 @@ const firebaseConfig = {
     if (refreshHistoryBtn) {
       refreshHistoryBtn.addEventListener('click', loadAttendanceHistory);
     }
+    
+    // Auto-scan button
+    if (autoScanButton) {
+      autoScanButton.addEventListener('click', function() {
+        if (!assignedRfid) {
+          scanLog.textContent = 'Error: No RFID assigned to your account. Please contact an administrator.';
+          return;
+        }
+        
+        // Fill in the input field with the assigned RFID
+        if (rfidInput) {
+          rfidInput.value = assignedRfid;
+        }
+        
+        // Simulate the scan with visual feedback
+        autoScanButton.classList.add('animate-pulse');
+        scanLog.textContent = `Auto-scanning with your assigned RFID: ${assignedRfid}...`;
+        
+        // Process the RFID scan after a small delay for visual effect
+        setTimeout(() => {
+          handleRFIDScan(assignedRfid);
+          autoScanButton.classList.remove('animate-pulse');
+        }, 800);
+      });
+    }
   });
 
-// Add this function to your dashboard.js
 function setupRFIDListener() {
   console.log("Setting up RFID scanner listener...");
   
-  // Reference to the latest_scan node
-  const latestScanRef = rtdb.ref('/latest_scan');
-  
-  // Listen for changes
-  latestScanRef.on('value', (snapshot) => {
-    const scanData = snapshot.val();
+  try {
+    // Reference to the latest_scan node
+    const latestScanRef = rtdb.ref('/latest_scan');
     
-    if (scanData && scanData.uid) {
-      console.log("RFID scan detected:", scanData.uid);
-      
-      // Fill in the RFID input field
-      const rfidInput = document.getElementById('rfid-input');
-      rfidInput.value = scanData.uid;
-      
-      // Highlight the input field to make the change noticeable
-      rfidInput.classList.add('bg-yellow-100', 'dark:bg-yellow-800');
-      setTimeout(() => {
-        rfidInput.classList.remove('bg-yellow-100', 'dark:bg-yellow-800');
-      }, 1500);
-      
-      // Simulate clicking the scan button
-      document.getElementById('scan-button').click();
-      
-      // Add visual feedback for scan
-      scanLog.textContent = `Auto-detected RFID scan: ${scanData.uid}`;
+    // Listen for changes and handle permission errors
+    latestScanRef.on('value', 
+      (snapshot) => {
+        const scanData = snapshot.val();
+        
+        if (scanData && scanData.uid) {
+          // Process the RFID scan as before
+          handleRFIDScan(scanData.uid);
+        }
+      },
+      (error) => {
+        console.error("Error accessing RFID scan data:", error.message);
+        scanLog.textContent = "Using manual mode: RFID scanner access unavailable";
+        
+        // Show a user-friendly message in the scanner area
+        const scannerArea = document.querySelector('.mt-6.bg-gray-50');
+        if (scannerArea) {
+          // Add a yellow warning background
+          scannerArea.classList.add('bg-yellow-50', 'dark:bg-yellow-900/20');
+          scannerArea.classList.remove('bg-gray-50', 'dark:bg-gray-700/50');
+          
+          // Add a suggestion to use the auto-scan feature if RFID is assigned
+          if (assignedRfid) {
+            scanLog.textContent = "Hardware scanner unavailable. Use the 'Use My RFID' button instead.";
+            // Make the auto-scan button more noticeable
+            if (autoScanButton) {
+              autoScanButton.classList.add('ring-2', 'ring-yellow-400');
+            }
+          } else {
+            scanLog.textContent = "Hardware scanner unavailable. Please enter your RFID manually.";
+          }
+          
+          // Focus on the manual input field as fallback
+          if (rfidInput) {
+            rfidInput.focus();
+            rfidInput.placeholder = "Enter RFID manually (RFID hardware unavailable)";
+          }
+        }
+      }
+    );
+  } catch (err) {
+    console.error("Failed to set up RFID listener:", err);
+    // Fall back to manual mode only
+    const scannerArea = document.querySelector('.mt-6.bg-gray-50');
+    if (scannerArea) {
+      scannerArea.querySelector('#scan-log').textContent = 
+        "Manual mode only: Please enter your RFID number above";
     }
-  });
+  }
 }
