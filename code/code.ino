@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <map> // Include map for tracking UIDs
 
 // RFID
 #define SS_PIN 10
@@ -18,6 +19,8 @@ SoftwareSerial esp8266(2, 3); // RX, TX
 #define GREEN_PIN 7
 #define BLUE_PIN 8
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+std::map<String, bool> uidStates; // Map to track UIDs and their states
 
 void setup() {
   Serial.begin(9600);
@@ -42,7 +45,10 @@ void setup() {
 }
 
 void loop() {
-  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) return;
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+    showColor("blue"); // Turn LED blue when no card is detected
+    return;
+  }
 
   String uid = "";
   for (byte i = 0; i < mfrc522.uid.size; i++) {
@@ -52,13 +58,23 @@ void loop() {
   Serial.println("UID: " + uid);
 
   lcd.clear();
-  lcd.print("UID: ");
-  lcd.setCursor(0, 1);
-  lcd.print(uid);
 
-  buzz();
+  // Check if the UID is already in the map
+  if (uidStates.find(uid) == uidStates.end() || !uidStates[uid]) {
+    // First scan: Show "Welcome"
+    lcd.print("Welcome");
+    uidStates[uid] = true; // Mark as scanned
+  } else {
+    // Second scan: Show "Goodbye"
+    lcd.print("Goodbye");
+    uidStates[uid] = false; // Reset state for the UID
+  }
+
+  // Turn LED green and activate buzzer for 2 seconds
   showColor("green");
+  buzz(2000); // Buzzer for 2 seconds
   sendToFirebase(uid);
+
   delay(2000);
   showColor("off");
   lcd.clear();
@@ -95,6 +111,12 @@ void sendCommand(String cmd) {
   }
 }
 
+void buzz(int duration) {
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(duration);
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
 void buzz() {
   digitalWrite(BUZZER_PIN, HIGH);
   delay(200);
@@ -110,6 +132,10 @@ void showColor(String color) {
     digitalWrite(RED_PIN, HIGH);
     digitalWrite(GREEN_PIN, LOW);
     digitalWrite(BLUE_PIN, LOW);
+  } else if (color == "blue") {
+    digitalWrite(RED_PIN, LOW);
+    digitalWrite(GREEN_PIN, LOW);
+    digitalWrite(BLUE_PIN, HIGH);
   } else {
     digitalWrite(RED_PIN, LOW);
     digitalWrite(GREEN_PIN, LOW);
