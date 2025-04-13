@@ -1,209 +1,207 @@
 #include <SPI.h>
-#include <MFRC522.h>
-#include <FirebaseESP8266.h>
-#include <time.h>
 #include <Wire.h>
+#include <MFRC522.h>
 #include <LiquidCrystal_I2C.h>
-#include <map>
+#include <SoftwareSerial.h>
+#include <ArduinoJson.h>
 
 // RFID Pins
 #define SS_PIN 10
 #define RST_PIN 9
+
+// ESP-01 Pins
+#define ESP_RX 2
+#define ESP_TX 3
+
+// Buzzer Pin
+#define BUZZER_PIN 8
+
+// LED Module Pins (HW-479)
+#define LED_RED 5
+#define LED_GREEN 6
+#define LED_BLUE 7
+
+// Firebase Details
+const char* FIREBASE_HOST = "your-firebase-database-url.firebaseio.com";
+const char* FIREBASE_AUTH = "your-firebase-database-secret";
+
+// RFID Reader
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// LED Pins
-#define GREEN_LED_PIN 4
-#define RED_LED_PIN 5
+// LCD Display
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// LCD Configuration
-LiquidCrystal_I2C lcd(0x27, 16, 2); // Set the LCD address to 0x27 for a 16x2 display
+// ESP-01 Communication
+SoftwareSerial espSerial(ESP_RX, ESP_TX);
 
-// Wi-Fi Credentials
-const char* ssid = "YOUR_SSID"; // Replace with your Wi-Fi SSID
-const char* password = "YOUR_PASSWORD"; // Replace with your Wi-Fi password
+// UID State Map
+std::map<String, bool> uidStates;
 
-// Firebase Configuration
-#define FIREBASE_HOST "fdhf-4403b-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "Owh7MHTxs5FTxQ4KHPF885cFknNZlusGWhgHRB1i"
-
-FirebaseData firebaseData;
-
-// Track RFID scan status
-std::map<String, bool> uidStatus; // true = clocked in, false = not clocked in
+bool isWiFiConnected = false; // Track Wi-Fi connection status
 
 void setup() {
+  // Initialize Serial Monitor
   Serial.begin(9600);
+  espSerial.begin(9600);
+
+  // Initialize RFID Reader
   SPI.begin();
   mfrc522.PCD_Init();
-  
+
   // Initialize LCD
   lcd.init();
   lcd.backlight();
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("RFID Attendance");
-  lcd.setCursor(0, 1);
-  lcd.print("System Ready");
-  
-  // Initialize LED pins
-  pinMode(GREEN_LED_PIN, OUTPUT);
-  pinMode(RED_LED_PIN, OUTPUT);
-  
+  lcd.print("Initializing...");
+
+  // Initialize Buzzer and LED Pins
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+
   // Turn off LEDs initially
-  digitalWrite(GREEN_LED_PIN, LOW);
-  digitalWrite(RED_LED_PIN, LOW);
-  
-  Serial.println("RFID Reader Initialized");
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_BLUE, LOW);
 
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to Wi-Fi...");
-    lcd.setCursor(0, 1);
-    lcd.print("Connecting Wi-Fi");
-  }
-  Serial.println("Connected to Wi-Fi");
-  lcd.setCursor(0, 1);
-  lcd.print("Wi-Fi Connected ");
-
-  // Initialize Firebase
-  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-  Firebase.reconnectWiFi(true);
-
-  // Initialize NTP for timestamps
-  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-  Serial.println("Waiting for NTP time sync...");
-  lcd.setCursor(0, 1);
-  lcd.print("Syncing time... ");
-  
-  while (time(nullptr) < 100000) {
-    delay(1000);
-    Serial.print(".");
-  }
-  Serial.println("\nTime synchronized");
-  
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Scan Your Card");
-  lcd.setCursor(0, 1);
-  lcd.print("to Clock In/Out");
+  // Attempt to connect to Wi-Fi
+  checkWiFiStatus();
 }
 
 void loop() {
-  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
-    delay(50);
-    return;
+  // Monitor Wi-Fi status
+  if (!isWiFiConnected) {
+    checkWiFiStatus();
   }
 
-  // Read the UID of the card
-  String uid = "";
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
-    uid += String(mfrc522.uid.uidByte[i], HEX);
+  // Look for new RFID cards
+  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+    // Read the card's UID
+    String uid = "";
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+      uid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+      uid += String(mfrc522.uid.uidByte[i], HEX);
+    }
+    uid.toUpperCase();
+    Serial.println("Card UID: " + uid);
+
+    // Check UID in Firebase
+    handleRFIDScan(uid);
+
+    // Halt the card
+    mfrc522.PICC_HaltA();
   }
-  uid.toUpperCase();
-  Serial.println("UID: " + uid);
-
-  // Get the current timestamp
-  String timestamp = getTimestamp();
-
-  // Send data to Firebase
-  sendToFirebase(uid, timestamp);
-
-  // Provide feedback
-  Serial.println("Data sent to Firebase.");
-  delay(2000);
-  
-  // Reset display after delay
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Scan Your Card");
-  lcd.setCursor(0, 1);
-  lcd.print("to Clock In/Out");
 }
 
-void sendToFirebase(String uid, String timestamp) {
-  bool success = true;
-  bool isClockingIn = !uidStatus.count(uid) || !uidStatus[uid];
-  
-  // First, update the attendance records
-  String attendancePath = "/attendance";
-  FirebaseJson attendanceJson;
-  attendanceJson.set("uid", uid);
-  attendanceJson.set("timestamp", timestamp);
-  attendanceJson.set("status", isClockingIn ? "in" : "out");
+void handleRFIDScan(String uid) {
+  String userName = getUserNameFromFirebase(uid);
 
-  if (Firebase.pushJSON(firebaseData, attendancePath, attendanceJson)) {
-    Serial.println("Attendance recorded successfully.");
+  if (userName != "") {
+    // Valid UID
+    if (uidStates.find(uid) == uidStates.end() || !uidStates[uid]) {
+      // First scan: Welcome
+      lcd.clear();
+      lcd.print("Welcome ");
+      lcd.setCursor(0, 1);
+      lcd.print(userName);
+      uidStates[uid] = true; // Mark as scanned
+      buzzPattern(1); // 1 beep for entry
+    } else {
+      // Second scan: Goodbye
+      lcd.clear();
+      lcd.print("Goodbye ");
+      lcd.setCursor(0, 1);
+      lcd.print(userName);
+      uidStates[uid] = false; // Reset state for the UID
+      buzzPattern(2); // 2 beeps for exit
+    }
+
+    // Indicate success with green LED
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_RED, LOW);
+    digitalWrite(LED_BLUE, LOW);
   } else {
-    Serial.println("Failed to record attendance.");
-    Serial.println(firebaseData.errorReason());
-    success = false;
+    // Invalid UID
+    lcd.clear();
+    lcd.print("Access Denied");
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_BLUE, LOW);
+    buzzPattern(3); // 3 beeps for error/denied
   }
 
-  // Then update latest_scan node for real-time dashboard detection
-  String latestScanPath = "/latest_scan";
-  FirebaseJson latestScanJson;
-  latestScanJson.set("uid", uid);
-  latestScanJson.set("timestamp", timestamp);
-  latestScanJson.set("status", isClockingIn ? "in" : "out");
-  latestScanJson.set("scanTime", millis());  // Add this to ensure updates are detected
+  delay(2000); // Wait before resetting LCD
+  lcd.clear();
+  lcd.print("Scan Your Card");
+}
 
-  if (Firebase.setJSON(firebaseData, latestScanPath, latestScanJson)) {
-    Serial.println("Latest scan updated successfully.");
-  } else {
-    Serial.println("Failed to update latest scan.");
-    Serial.println(firebaseData.errorReason());
-    success = false;
+String getUserNameFromFirebase(String uid) {
+  // Create HTTP GET request
+  String httpRequest = "GET /users/" + uid + "/name.json?auth=" + String(FIREBASE_AUTH) + " HTTP/1.1\r\n";
+  httpRequest += "Host: " + String(FIREBASE_HOST) + "\r\n";
+  httpRequest += "Connection: close\r\n\r\n";
+
+  // Send request to ESP-01
+  espSerial.println(httpRequest);
+  delay(1000);
+
+  // Read response
+  String response = "";
+  while (espSerial.available()) {
+    response += espSerial.readString();
   }
 
-  // Get user's name from Firebase
-  String userName = "User"; // Default name
-  if (success) {
-    String userPath = "/users/" + uid + "/name";
-    if (Firebase.getString(firebaseData, userPath)) {
-      if (firebaseData.stringData().length() > 0) {
-        userName = firebaseData.stringData();
-      }
+  // Parse JSON response
+  int jsonStart = response.indexOf("\r\n\r\n") + 4;
+  if (jsonStart > 4) {
+    String jsonResponse = response.substring(jsonStart);
+    StaticJsonDocument<200> doc;
+    deserializeJson(doc, jsonResponse);
+    if (doc.is<String>()) {
+      return doc.as<String>();
     }
   }
 
-  // Display appropriate message based on clock in/out status
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  
-  if (isClockingIn) {
-    lcd.print("Welcome");
-    lcd.setCursor(0, 1);
-    lcd.print(userName);
-    uidStatus[uid] = true; // Mark as clocked in
-  } else {
-    lcd.print("Goodbye");
-    lcd.setCursor(0, 1);
-    lcd.print("Have a good day");
-    uidStatus[uid] = false; // Mark as clocked out
-  }
-
-  // Provide LED feedback
-  if (success) {
-    // Success - turn on green LED
-    digitalWrite(GREEN_LED_PIN, HIGH);
-    digitalWrite(RED_LED_PIN, LOW);
-    delay(1000);
-    digitalWrite(GREEN_LED_PIN, LOW);
-  } else {
-    // Error - turn on red LED
-    digitalWrite(RED_LED_PIN, HIGH);
-    digitalWrite(GREEN_LED_PIN, LOW);
-    delay(1000);
-    digitalWrite(RED_LED_PIN, LOW);
-  }
+  return ""; // Return empty string if UID is not found
 }
 
-String getTimestamp() {
-  time_t now = time(nullptr);
-  struct tm* timeinfo = localtime(&now);
-  char buffer[20];
-  strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%S", timeinfo);
-  return String(buffer);
+void checkWiFiStatus() {
+  lcd.clear();
+  lcd.print("Connecting Wi-Fi");
+  espSerial.println("AT+CWJAP?");
+  delay(2000);
+
+  String response = "";
+  while (espSerial.available()) {
+    response += espSerial.readString();
+  }
+
+  if (response.indexOf("OK") != -1) {
+    lcd.clear();
+    lcd.print("Wi-Fi Connected");
+    digitalWrite(LED_BLUE, HIGH); // Indicate Wi-Fi connection with blue LED
+    digitalWrite(LED_RED, LOW);
+    isWiFiConnected = true; // Update Wi-Fi status
+  } else {
+    lcd.clear();
+    lcd.print("Wi-Fi Not Found");
+    digitalWrite(LED_RED, HIGH); // Indicate no Wi-Fi with red LED
+    digitalWrite(LED_BLUE, LOW);
+    isWiFiConnected = false; // Update Wi-Fi status
+    delay(5000); // Retry after 5 seconds
+  }
+
+  delay(2000);
+  lcd.clear();
+  lcd.print("Scan Your Card");
+}
+
+void buzzPattern(int pattern) {
+  for (int i = 0; i < pattern; i++) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(200);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(200);
+  }
 }
