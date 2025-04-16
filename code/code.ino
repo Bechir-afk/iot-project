@@ -231,8 +231,8 @@ void handleRFIDScan() {
 
 // Function to get user name from Firebase
 String getUserNameFromFirebase(String uid) {
-  // Format the URL path
-  String urlPath = "/users/" + uid + "/name.json";
+  // For Firestore REST API
+  String urlPath = "/v1/projects/fdhf-4403b/databases/(default)/documents/users/" + uid;
   
   // Start TCP connection
   String cmd = "AT+CIPSTART=\"TCP\",\"";
