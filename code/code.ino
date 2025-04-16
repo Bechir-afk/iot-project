@@ -229,15 +229,17 @@ void handleRFIDScan() {
   }
 }
 
-// Function to get user name from Firebase
+// Function to get user name from Firebase Firestore
 String getUserNameFromFirebase(String uid) {
-  // For Firestore REST API
+  // For simplicity and reliability, use Firestore with a public API key
   String urlPath = "/v1/projects/fdhf-4403b/databases/(default)/documents/users/" + uid;
   
+  Serial.println("Fetching document for UID: " + uid);
+  
   // Start TCP connection
-  String cmd = "AT+CIPSTART=\"TCP\",\"";
-  cmd += FIREBASE_HOST;
-  cmd += "\",80";
+  String cmd = "AT+CIPSTART=\"SSL\",\"";  // Use SSL instead of TCP for secure connection
+  cmd += "firestore.googleapis.com";
+  cmd += "\",443";
   espSerial.println(cmd);
   delay(2000);
   
@@ -247,18 +249,15 @@ String getUserNameFromFirebase(String uid) {
   }
   
   if (response.indexOf("ERROR") != -1) {
-    Serial.println("TCP connection failed");
-    return "";
+    Serial.println("SSL connection failed");
+    return "Unknown";  // Return default if connection fails
   }
   
-  // Create HTTP GET request
-  String httpRequest = "GET " + urlPath;
-  if (FIREBASE_AUTH != NULL && strlen(FIREBASE_AUTH) > 0) {
-    httpRequest += "?auth=" + String(FIREBASE_AUTH);
-  }
-  httpRequest += " HTTP/1.1\r\nHost: ";
-  httpRequest += FIREBASE_HOST;
-  httpRequest += "\r\nConnection: close\r\n\r\n";
+  // Create HTTP GET request - use API key authentication
+  String httpRequest = "GET " + urlPath + "?key=AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo HTTP/1.1\r\n";  // Use your web API key
+  httpRequest += "Host: firestore.googleapis.com\r\n";
+  httpRequest += "Connection: close\r\n";
+  httpRequest += "\r\n";
   
   // Send data length
   cmd = "AT+CIPSEND=";
@@ -266,42 +265,61 @@ String getUserNameFromFirebase(String uid) {
   espSerial.println(cmd);
   delay(1000);
   
+  // Send HTTP request and capture response
   if (espSerial.find(">")) {
-    // Send HTTP request
     espSerial.print(httpRequest);
-    Serial.println("Sent HTTP request: " + httpRequest);
+    Serial.println("Sent HTTP request to Firestore");
     
-    // Wait for response
+    // Wait for response with better timeout handling
     unsigned long timeout = millis();
-    while (millis() - timeout < 5000) {
+    response = "";
+    
+    while (millis() - timeout < 10000) {  // 10-second timeout
       if (espSerial.available()) {
-        response = "";
-        while (espSerial.available()) {
-          response += (char)espSerial.read();
-        }
-        Serial.println("Response: " + response);
+        char c = espSerial.read();
+        response += c;
         
-        // Parse JSON response - look for a quoted string after the HTTP headers
-        int jsonStart = response.indexOf("\r\n\r\n") + 4;
-        if (jsonStart > 4) {
-          String jsonResponse = response.substring(jsonStart);
-          
-          // Check if it's not null
-          if (jsonResponse.indexOf("null") == -1 && jsonResponse.length() > 2) {
-            // If we have quotes, it's likely a valid name
-            if (jsonResponse.indexOf("\"") != -1) {
-              // Remove quotes
-              jsonResponse.replace("\"", "");
-              return jsonResponse;
-            }
-          }
+        // Break if we've received the end of the response
+        if (response.indexOf("\r\n0\r\n\r\n") > 0) {
+          break;
         }
-        break;
       }
     }
+    
+    Serial.println("Response received, length: " + String(response.length()));
+    
+    // Debug output - print first 100 characters of response
+    if (response.length() > 0) {
+      Serial.println("Response preview: " + response.substring(0, min(100, (int)response.length())));
+    }
+    
+    // Look for the name field in the Firestore response
+    // Based on your Firestore document structure: name field with value "binkou"
+    int nameFieldPos = response.indexOf("name\":{\"stringValue\":\"");
+    
+    if (nameFieldPos > 0) {
+      nameFieldPos += 20; // Move past the prefix
+      int nameEndPos = response.indexOf("\"", nameFieldPos);
+      
+      if (nameEndPos > nameFieldPos) {
+        String userName = response.substring(nameFieldPos, nameEndPos);
+        Serial.println("Found name: " + userName);
+        return userName;
+      } else {
+        Serial.println("Could not find end of name field");
+      }
+    } else {
+      Serial.println("Could not find name field in response");
+    }
+  } else {
+    Serial.println("Failed to send HTTP request");
   }
   
-  return ""; // Return empty string if UID is not found
+  // Close the connection
+  espSerial.println("AT+CIPCLOSE");
+  delay(1000);
+  
+  return "Unknown";  // Default return if we couldn't extract the name
 }
 
 // Function to control buzzer patterns
