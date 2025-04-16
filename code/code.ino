@@ -182,7 +182,7 @@ void handleRFIDScan() {
       uid += String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
       uid += String(mfrc522.uid.uidByte[i], HEX);
     }
-    uid.toUpperCase();
+    uid.toUpperCase(); // Ensure uppercase to match Firestore document ID
     
     // Display UID on LCD
     lcd.clear();
@@ -200,18 +200,26 @@ void handleRFIDScan() {
     if (isWiFiConnected) {
       String userName = getUserNameFromFirebase(uid);
 
-      if (userName != "") {
-        // Valid UID
+      if (userName != "" && userName != "Unknown") {
+        // Valid UID - name found
         lcd.clear();
         lcd.print("Welcome");
         lcd.setCursor(0, 1);
         lcd.print(userName);
         buzzPattern(1); // 1 beep for valid UID
+        digitalWrite(LED_GREEN, HIGH);
+        delay(1000);
+        digitalWrite(LED_GREEN, LOW);
       } else {
-        // Invalid UID
+        // Invalid UID or name not found
         lcd.clear();
-        lcd.print("Invalid UID");
+        lcd.print("Invalid Card");
+        lcd.setCursor(0, 1);
+        lcd.print("Access Denied");
         buzzPattern(3); // 3 beeps for invalid UID
+        digitalWrite(LED_RED, HIGH);
+        delay(1000);
+        digitalWrite(LED_RED, LOW);
       }
     } else {
       lcd.clear();
@@ -254,9 +262,10 @@ String getUserNameFromFirebase(String uid) {
   }
   
   // Create HTTP GET request - use API key authentication
-  String httpRequest = "GET " + urlPath + "?key=AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo HTTP/1.1\r\n";  // Use your web API key
+  String httpRequest = "GET " + urlPath + "?key=AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo HTTP/1.1\r\n";
   httpRequest += "Host: firestore.googleapis.com\r\n";
   httpRequest += "Connection: close\r\n";
+  httpRequest += "Accept: */*\r\n"; // Add this line
   httpRequest += "\r\n";
   
   // Send data length
@@ -294,8 +303,19 @@ String getUserNameFromFirebase(String uid) {
     }
     
     // Look for the name field in the Firestore response
-    // Based on your Firestore document structure: name field with value "binkou"
     int nameFieldPos = response.indexOf("name\":{\"stringValue\":\"");
+    
+    // Before looking for name field
+    Serial.println("Looking for name field in response...");
+    
+    // If name field not found
+    if (nameFieldPos <= 0) {
+      Serial.println("Name field not found in response. Response preview:");
+      // Print more of the response for debugging
+      for (int i = 0; i < response.length(); i += 100) {
+        Serial.println(response.substring(i, min(i+100, (int)response.length())));
+      }
+    }
     
     if (nameFieldPos > 0) {
       nameFieldPos += 20; // Move past the prefix
@@ -304,13 +324,24 @@ String getUserNameFromFirebase(String uid) {
       if (nameEndPos > nameFieldPos) {
         String userName = response.substring(nameFieldPos, nameEndPos);
         Serial.println("Found name: " + userName);
+        
+        // Update display and indicate success
+        lcd.clear();
+        lcd.print("Welcome");
+        lcd.setCursor(0, 1);
+        lcd.print(userName);
+        digitalWrite(LED_GREEN, HIGH);
+        delay(500);
+        digitalWrite(LED_GREEN, LOW);
         return userName;
-      } else {
-        Serial.println("Could not find end of name field");
       }
-    } else {
-      Serial.println("Could not find name field in response");
     }
+
+    // If we reach here, the name wasn't found
+    digitalWrite(LED_RED, HIGH);
+    delay(500);
+    digitalWrite(LED_RED, LOW);
+    return ""; // Return empty string for not found
   } else {
     Serial.println("Failed to send HTTP request");
   }
