@@ -17,7 +17,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-admin-helper.js"></script>
+  <!-- Add this line below the other Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
   <!-- Sliding Menu -->
@@ -144,6 +145,21 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Add right after firebase initialization, before any other code
+    console.log("Firebase Database object:", firebase.database());
+    const testRef = firebase.database().ref();
+    console.log("Root reference:", testRef);
+
+    // Monitor connection status
+    const connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", (snap) => {
+      if (snap.val() === true) {
+        console.log("Connected to Firebase RTDB");
+      } else {
+        console.log("Not connected to Firebase RTDB");
+      }
+    });
+
     // Improve the createAuthAccount function with better error handling
     function createAuthAccount(email, password) {
       // Validate password length first
@@ -228,6 +244,84 @@
         });
     }
 
+    // After updating Firestore, also update RTDB
+    function syncUserToRTDB(userId, userData) {
+      console.log("Syncing to RTDB:", userId, userData);
+      
+      // Test database access
+      const dbRef = firebase.database();
+      
+      // First check if we can even write to the root
+      return dbRef.ref('.info/connected').once('value')
+        .then(snapshot => {
+          console.log("RTDB connected:", snapshot.val());
+          
+          if (!snapshot.val()) {
+            throw new Error("Not connected to RTDB");
+          }
+          
+          const rtdbRef = dbRef.ref(`users/${userId}`);
+          return rtdbRef.set({
+            name: userData.name,
+            role: userData.role
+          });
+        })
+        .then(() => {
+          console.log("Successfully synced to RTDB:", userId);
+          return firebase.database().ref(`users/${userId}`).once('value');
+        })
+        .then(snapshot => {
+          console.log("Verification - RTDB data:", snapshot.val());
+        })
+        .catch(error => {
+          console.error("Error syncing to RTDB:", error);
+          alert("Failed to sync to RTDB: " + error.message); // Show error in alert
+          throw error; // Re-throw to maintain the promise chain
+        });
+    }
+
+    // Add this after your Firebase initialization
+    function testRTDBConnection() {
+      const testRef = firebase.database().ref('test_connection');
+      testRef.set({
+        timestamp: Date.now(),
+        message: "Connection test"
+      })
+      .then(() => {
+        console.log("RTDB connection successful!");
+        alert("RTDB connection working properly");
+      })
+      .catch(error => {
+        console.error("RTDB connection failed:", error);
+        alert("RTDB connection failed: " + error.message);
+      });
+    }
+
+    // Add a button to test the connection
+    const testButton = document.createElement('button');
+    testButton.textContent = "Test RTDB Connection";
+    testButton.className = "mb-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700";
+    testButton.onclick = testRTDBConnection;
+
+    // Insert this button at the top of your page
+    document.querySelector('.max-w-7xl').insertBefore(testButton, document.querySelector('.max-w-7xl').firstChild);
+
+    // Force immediate RTDB write test on page load
+    setTimeout(() => {
+      const testRef = firebase.database().ref('debug_test');
+      console.log("Attempting direct RTDB write...");
+      testRef.set({
+        timestamp: Date.now(),
+        test: "Direct write test"
+      })
+      .then(() => {
+        console.log("DIRECT RTDB TEST SUCCESS!");
+      })
+      .catch(error => {
+        console.error("DIRECT RTDB TEST FAILED:", error);
+      });
+    }, 3000); // Wait 3 seconds after page load
+
     // Add new student to Firestore or update existing student
     document.getElementById("add-student-form").addEventListener("submit", function (e) {
       e.preventDefault();
@@ -307,6 +401,12 @@
             role: "student",
             authUid: authUid, // Store the auth UID as a field instead
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          return syncUserToRTDB(rfid, {
+            name: name,
+            role: "student"
           });
         })
         .then(() => {
@@ -427,7 +527,14 @@
               .then(() => {
                 console.log("Student document deleted successfully");
                 
-                // Remove the row from the UI immediately
+                // Also delete from RTDB
+                return firebase.database().ref(`users/${studentId}`).remove();
+              })
+              .then(() => {
+                console.log("RTDB user record deleted successfully");
+                
+                // Continue with existing code...
+                // Remove the row from the UI immediately...
                 if (rowElement) {
                   rowElement.remove();
                 }
@@ -516,4 +623,3 @@
   </script>
 </body>
 </html>
-``` 
