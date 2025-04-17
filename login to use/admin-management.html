@@ -280,48 +280,6 @@
         });
     }
 
-    // Add this after your Firebase initialization
-    function testRTDBConnection() {
-      const testRef = firebase.database().ref('test_connection');
-      testRef.set({
-        timestamp: Date.now(),
-        message: "Connection test"
-      })
-      .then(() => {
-        console.log("RTDB connection successful!");
-        alert("RTDB connection working properly");
-      })
-      .catch(error => {
-        console.error("RTDB connection failed:", error);
-        alert("RTDB connection failed: " + error.message);
-      });
-    }
-
-    // Add a button to test the connection
-    const testButton = document.createElement('button');
-    testButton.textContent = "Test RTDB Connection";
-    testButton.className = "mb-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700";
-    testButton.onclick = testRTDBConnection;
-
-    // Insert this button at the top of your page
-    document.querySelector('.max-w-7xl').insertBefore(testButton, document.querySelector('.max-w-7xl').firstChild);
-
-    // Force immediate RTDB write test on page load
-    setTimeout(() => {
-      const testRef = firebase.database().ref('debug_test');
-      console.log("Attempting direct RTDB write...");
-      testRef.set({
-        timestamp: Date.now(),
-        test: "Direct write test"
-      })
-      .then(() => {
-        console.log("DIRECT RTDB TEST SUCCESS!");
-      })
-      .catch(error => {
-        console.error("DIRECT RTDB TEST FAILED:", error);
-      });
-    }, 3000); // Wait 3 seconds after page load
-
     // Add new student to Firestore or update existing student
     document.getElementById("add-student-form").addEventListener("submit", function (e) {
       e.preventDefault();

@@ -245,7 +245,7 @@ String getUserNameFromRTDB(String uid) {
   
   // Start TCP connection
   String cmd = "AT+CIPSTART=\"TCP\",\"";  // Use TCP instead of SSL
-  cmd += FIREBASE_HOST;
+  cmd += FIREBASE_HOST;  // The command adds the https:// automatically
   cmd += "\",443";
   espSerial.println(cmd);
   delay(2000);
