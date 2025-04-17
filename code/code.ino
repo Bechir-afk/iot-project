@@ -10,16 +10,16 @@
 #define RST_PIN 9
 
 // ESP-01 Pins - IMPORTANT: Don't use pins 0,1 as they're used by hardware Serial
-#define ESP_RX 0  // Changed from 0
-#define ESP_TX 1  // Changed from 1
+#define ESP_RX 1  // Changed from 0
+#define ESP_TX 2  // Changed from 1
 
 // Buzzer Pin
 #define BUZZER_PIN 8
 
 // LED Module Pins (HW-479)
-#define LED_RED 5
-#define LED_GREEN 4
-#define LED_BLUE 3
+#define LED_RED 6
+#define LED_GREEN 5
+#define LED_BLUE 4
 
 // Firebase Details
 const char* FIREBASE_HOST = "fdhf-4403b-default-rtdb.firebaseio.com"; // Firebase Realtime Database URL
@@ -68,9 +68,15 @@ void setup() {
   digitalWrite(LED_BLUE, LOW);
 
   // Initialize ESP-01 with AT commands
+  espSerial.println("AT");  // Add basic AT check
+  delay(1000);
+  while(espSerial.available()) {
+    Serial.write(espSerial.read()); // Display response
+  }
+
   Serial.println("Resetting ESP-01");
   espSerial.println("AT+RST");
-  delay(2000);
+  delay(3000); // Longer delay after reset
   while(espSerial.available()) espSerial.read(); // Clear buffer
   
   espSerial.println("AT+CWMODE=1"); // Set to station mode
@@ -131,7 +137,9 @@ void connectToWiFi() {
       Serial.write(c); // Monitor response
       
       // More lenient connection detection
-      if (response.indexOf("CONNECTED") != -1 || response.indexOf("OK") != -1) {
+      if (response.indexOf("GOT IP") != -1 || 
+          response.indexOf("WIFI CONNECTED") != -1 || 
+          response.indexOf("OK") != -1) {
         connected = true;
       }
       if (response.indexOf("FAIL") != -1 || response.indexOf("ERROR") != -1) {
