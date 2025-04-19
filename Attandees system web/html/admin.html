@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Management - RFID Attendance System</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="../src/fst.png">
+  <link rel="stylesheet" href="../css/menu.css">
+  <link rel="stylesheet" href="../css/Navigation Bar.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="../js/admin.js" defer></script>
+</head>
+<body>
+  <!-- Sliding Menu -->
+  <div class="menu">
+    <ul class="menu-content">
+      <li><a href="../html/home.html"><span class="material-symbols-outlined">home</span><span>Home</span></a></li>
+      <li><a href="../html/dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a></li>
+      <li><a href="../html/explore.html"><span class="material-symbols-outlined">explore</span><span>Explore</span></a></li>
+      <li><a href="../html/analytics.html"><span class="material-symbols-outlined">analytics</span><span>Analytics</span></a></li>
+      <li><a href="../html/settings.html"><span class="material-symbols-outlined">settings</span><span>Settings</span></a></li>
+      <li><a href="../html/profile.html"><span class="material-symbols-outlined">person</span><span>Account</span></a></li>
+      <li><a href="../html/report.html"><span class="material-symbols-outlined">report</span><span>Report</span></a></li>
+      <li><a href="../html/contact.html"><span class="material-symbols-outlined">email</span><span>Contact</span></a></li>
+      <li><a href="../html/admin.html" class="active"><span class="material-symbols-outlined">admin_panel_settings</span><span>Admin Management</span></a></li>
+      <li><a href="#" id="menu-logout"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav>
+    <div class="max-w-7xl">
+      <div class="flex justify-between">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <img src="../src/fst.png" alt="Logo">
+            <span>RFID Attendance System</span>
+          </div>
+        </div>
+        <div>
+          <button id="user-menu-btn">
+            <span class="sr-only">Open user menu</span>
+            <img id="user-avatar" src="../src/fst.png" alt="User avatar">
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl">
+    <h1>Admin Management</h1>
+
+    <!-- Add New Student Form -->
+    <div>
+      <div>
+        <h3>Add New Student</h3>
+        <p>Fill out the form below to add a new student.</p>
+      </div>
+      <div>
+        <form id="add-student-form">
+          <div>
+            <label for="student-name">Name</label>
+            <input type="text" id="student-name" name="student-name" required>
+          </div>
+          <div>
+            <label for="student-email">Email</label>
+            <input type="email" id="student-email" name="student-email" required>
+          </div>
+          <div>
+            <label for="student-password">Password</label>
+            <input type="text" id="student-password" name="student-password" required>
+            <p>This password will be used for student login</p>
+          </div>
+          <div>
+            <label for="rfid-badge">RFID Badge Number</label>
+            <input type="text" id="rfid-badge" name="rfid-badge" required>
+          </div>
+          <div>
+            <button type="button" id="cancel-edit-btn" class="hidden">Go Back</button>
+            <button type="submit">Add Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Interactive Table -->
+    <div>
+      <div>
+        <h3>Manage Students</h3>
+        <p>Use the table below to view, edit, or delete student records.</p>
+      </div>
+      <div>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>RFID Badge</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body">
+              <!-- Dynamic rows will be added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

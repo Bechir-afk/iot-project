@@ -65,25 +65,10 @@ const firebaseConfig = {
   let attendanceTotal = 0;
   let assignedRfid = null;
   
+  // Import utility functions
+  import { formatTime, formatDate, calculateDuration, showNotification } from './utils.js';
+  
   // Utility Functions
-  function formatTime(date) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  
-  function formatDate(date) {
-    return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
-  }
-  
-  function calculateDuration(startTime, endTime) {
-    const diff = Math.floor((endTime - startTime) / 60000); // difference in minutes
-    if (diff < 60) {
-      return `${diff}m`;
-    } else {
-      const hours = Math.floor(diff / 60);
-      const minutes = diff % 60;
-      return `${hours}h ${minutes}m`;
-    }
-  }
   
   function getEarlyLateStatus(timeStr) {
     const time = new Date(`1970-01-01T${timeStr}`);
