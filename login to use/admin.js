@@ -1,6 +1,3 @@
-// Import utility functions
-import { formatTime, formatDate, calculateDuration, showNotification } from './utils.js';
-
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAtj5j3xYmxRMOMR6ZOy8ucoqqhsD0jlZo",
@@ -204,7 +201,6 @@ function loadStudents() {
     })
     .catch((error) => {
       console.error("Error loading students:", error);
-      showNotification("Error loading students", "error");
     });
 }
 
