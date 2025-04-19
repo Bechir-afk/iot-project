@@ -57,6 +57,9 @@ void setup() {
   lcd.clear();
   lcd.print("Initializing...");
   
+  // Add this to your setup()
+  configTime(0, 0, "pool.ntp.org");
+
   // Rest of your setup code remains the same
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(LED_R, OUTPUT);
@@ -140,6 +143,9 @@ void connectToWiFi() {
 }
 
 void handleRFIDScan() {
+  static unsigned long lastScanTime = 0;
+  if (millis() - lastScanTime < 3000) return; // 3-second cooldown
+
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
     currentUID = getRFIDUID();
     lcd.clear();
@@ -160,6 +166,7 @@ void handleRFIDScan() {
 
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
+    lastScanTime = millis();
   }
 }
 
@@ -168,22 +175,46 @@ void checkFirebaseResponse() {
   String userName = getUserNameFromFirebase(currentUID);
   
   if (userName != "") {
-    // Valid UID
-    lcd.clear();
-    lcd.print("Welcome");
-    lcd.setCursor(0, 1);
-    lcd.print(userName);
-    beep(1);
+    // Valid RFID - Now check if already clocked in today
+    bool isClockOut = checkAlreadyClockedIn(currentUID);
+    
+    if (isClockOut) {
+      // User already clocked in, so clock out
+      lcd.clear();
+      lcd.print("Goodbye");
+      lcd.setCursor(0, 1);
+      lcd.print(userName);
+      setLED(0, 0, 1); // Blue for clock out
+      beep(2); // 2 beeps for clock out
+      
+      // Record clock-out in Firebase
+      recordAttendance(currentUID, userName, false); // false = clock out
+    } else {
+      // User not clocked in, so clock in
+      lcd.clear();
+      lcd.print("Welcome");
+      lcd.setCursor(0, 1);
+      lcd.print(userName);
+      setLED(0, 1, 0); // Green for clock in
+      beep(1); // 1 beep for clock in
+      
+      // Record clock-in in Firebase
+      recordAttendance(currentUID, userName, true); // true = clock in
+    }
   } else {
     // Invalid UID
     lcd.clear();
     lcd.print("Access Denied");
+    lcd.setCursor(0, 1);
+    lcd.print("Unknown Card");
+    setLED(1, 0, 0); // Red for invalid
     beep(3);
   }
 
   delay(2000);
   lcd.clear();
   lcd.print("Scan your card");
+  setLED(0, 0, 0); // Turn off LED
   currentState = READY_FOR_SCAN;
 }
 
@@ -233,6 +264,131 @@ String getUserNameFromFirebase(String uid) {
   
   http.end();
   return result;
+}
+
+// Function to check if user has already clocked in today
+bool checkAlreadyClockedIn(String uid) {
+  if (WiFi.status() != WL_CONNECTED) {
+    return false;
+  }
+  
+  HTTPClient http;
+  String date = getCurrentDate();
+  
+  // Format the URL path to check attendance for today
+  String url = "https://";
+  url += FIREBASE_HOST;
+  url += "/attendance/";
+  url += date;
+  url += "/";
+  url += uid;
+  url += ".json";
+  
+  http.begin(url);
+  int httpCode = http.GET();
+  
+  bool clockedIn = false;
+  if (httpCode > 0 && httpCode == HTTP_CODE_OK) {
+    String payload = http.getString();
+    
+    // If record exists and has clockIn but no clockOut, user is clocked in
+    if (payload != "null" && payload.indexOf("clockIn") > 0 && 
+        payload.indexOf("clockOut") == -1) {
+      clockedIn = true;
+    }
+  }
+  
+  http.end();
+  return clockedIn;
+}
+
+// Function to record attendance (clock in or clock out)
+void recordAttendance(String uid, String userName, bool isClockIn) {
+  if (WiFi.status() != WL_CONNECTED) {
+    return;
+  }
+  
+  HTTPClient http;
+  String date = getCurrentDate();
+  
+  // 1. Update attendance record
+  String attendanceUrl = "https://";
+  attendanceUrl += FIREBASE_HOST;
+  attendanceUrl += "/attendance/";
+  attendanceUrl += date;
+  attendanceUrl += "/";
+  attendanceUrl += uid;
+  attendanceUrl += ".json";
+  
+  // Create JSON with timestamp (current millis as simple timestamp)
+  String timestamp = String(millis());
+  String jsonData;
+  
+  if (isClockIn) {
+    jsonData = "{\"name\":\"" + userName + "\",\"clockIn\":" + timestamp + "}";
+  } else {
+    jsonData = "{\"clockOut\":" + timestamp + "}";
+    // Use PATCH to preserve existing clockIn value
+    attendanceUrl += "?x-http-method-override=PATCH";
+  }
+  
+  http.begin(attendanceUrl);
+  http.addHeader("Content-Type", "application/json");
+  
+  int httpCode;
+  if (isClockIn) {
+    httpCode = http.PUT(jsonData);
+  } else {
+    httpCode = http.PATCH(jsonData);
+  }
+  
+  if (httpCode > 0) {
+    Serial.printf("Attendance record %s: %d\n", 
+      isClockIn ? "clock-in" : "clock-out", httpCode);
+  }
+  http.end();
+  
+  // 2. Update latest_scan for dashboard integration
+  updateLatestScan(uid, userName, isClockIn);
+}
+
+// Function to update latest_scan for dashboard integration
+void updateLatestScan(String uid, String userName, bool isClockIn) {
+  if (WiFi.status() != WL_CONNECTED) {
+    return;
+  }
+  
+  HTTPClient http;
+  
+  // Format the URL for latest_scan
+  String url = "https://";
+  url += FIREBASE_HOST;
+  url += "/latest_scan.json";
+  
+  // Create JSON with all required fields for dashboard
+  String jsonData = "{";
+  jsonData += "\"uid\":\"" + uid + "\",";
+  jsonData += "\"name\":\"" + userName + "\",";
+  jsonData += "\"action\":\"" + String(isClockIn ? "clockIn" : "clockOut") + "\",";
+  jsonData += "\"timestamp\":" + String(millis());
+  jsonData += "}";
+  
+  http.begin(url);
+  http.addHeader("Content-Type", "application/json");
+  int httpCode = http.PUT(jsonData);
+  
+  if (httpCode > 0) {
+    Serial.printf("Latest scan update: %d\n", httpCode);
+  }
+  http.end();
+}
+
+// Helper function to get current date as YYYY-MM-DD
+String getCurrentDate() {
+  // ESP32 doesn't have a built-in RTC
+  // For production use, you should use an RTC module or NTP
+  // For now, we'll return a fixed date
+  return "2025-04-19"; // TODO: Replace with real date using RTC or NTP
 }
 
 String getRFIDUID() {
