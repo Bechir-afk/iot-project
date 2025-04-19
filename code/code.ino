@@ -45,10 +45,23 @@ bool wifiConnected = false;
 void setup() {
   Serial.begin(115200);
   
-  // Initializ SPI and RFID reader with explicit pin configuration
-  SPI.begin(SCK_PIN, MISO_PIN, MOSI_PIN, SS_PIN);
+  // Custom SPI initialization for ESP32
+  SPI.begin(SCK_PIN, MISO_PIN, MOSI_PIN); // Don't include SS_PIN here
   rfid.PCD_Init();
-  Serial.println("RFID reader initialized");
+
+  // Add a proper initialization check
+  if (!rfid.PCD_PerformSelfTest()) {
+    Serial.println("RFID reader test failed!");
+    lcd.clear();
+    lcd.print("RFID Error!");
+    while (1) { 
+      setLED(1, 0, 0); // Red LED for error
+      delay(300);
+      setLED(0, 0, 0);
+      delay(300);
+    }
+  }
+  Serial.println("RFID reader test passed!");
   
   // Initialize LCD with non-conflicting I2C
   Wire.begin(SDA_PIN, SCL_PIN);
@@ -70,7 +83,59 @@ void setup() {
   connectToWiFi();
 }
 
+// Add this function to show system status via LED
+void updateStatusLED() {
+  static unsigned long lastBlinkTime = 0;
+  static bool ledState = false;
+  
+  switch (currentState) {
+    case CONNECTING_WIFI:
+      // Blinking blue for WiFi connecting
+      if (millis() - lastBlinkTime > 300) {
+        ledState = !ledState;
+        setLED(0, 0, ledState ? 1 : 0);
+        lastBlinkTime = millis();
+      }
+      break;
+      
+    case READY_FOR_SCAN:
+      // Pulsing green to indicate ready
+      if (millis() - lastBlinkTime > 1000) {
+        ledState = !ledState;
+        setLED(0, ledState ? 0.5 : 0, 0);
+        lastBlinkTime = millis();
+      }
+      break;
+      
+    case PROCESSING_CARD:
+      // Fast blinking purple for processing
+      if (millis() - lastBlinkTime > 100) {
+        ledState = !ledState;
+        setLED(ledState ? 1 : 0, 0, ledState ? 1 : 0);
+        lastBlinkTime = millis();
+      }
+      break;
+  }
+}
+
 void loop() {
+  // Add timeout handling
+  unsigned long currentTime = millis();
+  
+  // If stuck in PROCESSING_CARD for too long (10 seconds)
+  if (currentState == PROCESSING_CARD && (currentTime - stateTime > 10000)) {
+    Serial.println("Processing timed out, returning to scan state");
+    lcd.clear();
+    lcd.print("Timeout!");
+    delay(1000);
+    lcd.clear();
+    lcd.print("Scan your card");
+    currentState = READY_FOR_SCAN;
+  }
+  
+  // Call this at the beginning of loop()
+  updateStatusLED();
+  
   switch (currentState) {
     case CONNECTING_WIFI:
       // If WiFi connection drops, try to reconnect
@@ -144,29 +209,42 @@ void connectToWiFi() {
 
 void handleRFIDScan() {
   static unsigned long lastScanTime = 0;
+  static unsigned long lastAttemptTime = 0;
+  
   if (millis() - lastScanTime < 3000) return; // 3-second cooldown
+  
+  // Try to wake up the RFID module periodically
+  if (millis() - lastAttemptTime > 1000) {
+    rfid.PCD_Init();      // Reinitialize reader
+    lastAttemptTime = millis();
+    Serial.println("Checking for RFID cards...");
+  }
 
-  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-    currentUID = getRFIDUID();
-    lcd.clear();
-    lcd.print("UID:");
-    lcd.setCursor(0, 1);
-    lcd.print(currentUID);
-    Serial.print("Scanned UID: ");
-    Serial.println(currentUID);
-
-    delay(1500); // Show UID for 1.5 seconds
-
-    // Check in Firebase
-    lcd.clear();
-    lcd.print("Checking UID...");
+  // First check if card is present
+  if (rfid.PICC_IsNewCardPresent()) {
+    Serial.println("Card detected!");
     
-    currentState = PROCESSING_CARD;
-    stateTime = millis();
+    // Then try to read it
+    if (rfid.PICC_ReadCardSerial()) {
+      currentUID = getRFIDUID();
+      Serial.print("Successfully read card UID: ");
+      Serial.println(currentUID);
+      
+      lcd.clear();
+      lcd.print("UID:");
+      lcd.setCursor(0, 1);
+      lcd.print(currentUID);
 
-    rfid.PICC_HaltA();
-    rfid.PCD_StopCrypto1();
-    lastScanTime = millis();
+      // Rest of your code...
+      
+      lastScanTime = millis();
+    } else {
+      Serial.println("Failed to read card data");
+      // Brief flash of red LED for failed read
+      setLED(1, 0, 0);
+      delay(200);
+      setLED(0, 0, 0);
+    }
   }
 }
 
@@ -385,10 +463,18 @@ void updateLatestScan(String uid, String userName, bool isClockIn) {
 
 // Helper function to get current date as YYYY-MM-DD
 String getCurrentDate() {
-  // ESP32 doesn't have a built-in RTC
-  // For production use, you should use an RTC module or NTP
-  // For now, we'll return a fixed date
-  return "2025-04-19"; // TODO: Replace with real date using RTC or NTP
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Failed to obtain time");
+    return "2025-04-19"; // Fallback date
+  }
+  
+  char dateStr[11];
+  sprintf(dateStr, "%04d-%02d-%02d", 
+          1900 + timeinfo.tm_year, 
+          timeinfo.tm_mon + 1, 
+          timeinfo.tm_mday);
+  return String(dateStr);
 }
 
 String getRFIDUID() {

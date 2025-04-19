@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop - BookHaven</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets\img\logo.png" type="image/png">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/img/logo.png" alt="BookHaven" height="30" class="d-inline-block align-text-top me-2">
+        <span class="fw-bold">BookHaven</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="shop.html">Shop</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              Categories
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html?category=fiction">Fiction</a></li>
+              <li><a class="dropdown-item" href="shop.html?category=non-fiction">Non-Fiction</a></li>
+              <li><a class="dropdown-item" href="shop.html?category=mystery">Mystery & Thriller</a></li>
+              <li><a class="dropdown-item" href="shop.html?category=scifi">Sci-Fi & Fantasy</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">All Books</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center">
+          <a href="cart.html" class="btn btn-outline-dark me-2 position-relative">
+            <i class="bi bi-cart"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">0</span>
+          </a>
+          <a href="login.html" class="btn btn-outline-dark me-2">
+            <i class="bi bi-person"></i> Login
+          </a>
+          <a href="signup.html" class="btn btn-dark">
+            Sign Up
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-light py-5">
+    <div class="container">
+      <h1>Browse Our Collection</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Shop</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Shop Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+          <!-- Category Filter -->
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Categories</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="fiction" checked>
+                  <label class="form-check-label" for="fiction">
+                    Fiction (45)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="non-fiction" checked>
+                  <label class="form-check-label" for="non-fiction">
+                    Non-Fiction (38)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="mystery" checked>
+                  <label class="form-check-label" for="mystery">
+                    Mystery & Thriller (27)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="scifi" checked>
+                  <label class="form-check-label" for="scifi">
+                    Sci-Fi & Fantasy (34)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="romance" checked>
+                  <label class="form-check-label" for="romance">
+                    Romance (22)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="poetry" checked>
+                  <label class="form-check-label" for="poetry">
+                    Poetry (19)
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Price Range</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="priceRange" class="form-label d-flex justify-content-between">
+                  <span>0 - 50 D</span>
+                  <span id="priceValue">25 D</span>
+                </label>
+                <input type="range" class="form-range" min="0" max="50" step="5" id="priceRange" value="25">
+              </div>
+            </div>
+          </div>
+
+          <!-- Author Filter -->
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Authors</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="author1">
+                  <label class="form-check-label" for="author1">
+                    Jane Austen (7)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="author2">
+                  <label class="form-check-label" for="author2">
+                    Stephen King (12)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="author3">
+                  <label class="form-check-label" for="author3">
+                    J.K. Rowling (8)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="author4">
+                  <label class="form-check-label" for="author4">
+                    George R.R. Martin (5)
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="author5">
+                  <label class="form-check-label" for="author5">
+                    Agatha Christie (9)
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer bg-white">
+              <a href="#" class="text-decoration-none small">Show more authors</a>
+            </div>
+          </div>
+
+          <!-- Rating Filter -->
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Customer Rating</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rating" id="rating5">
+                  <label class="form-check-label" for="rating5">
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <span class="ms-1">(5.0)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rating" id="rating4">
+                  <label class="form-check-label" for="rating4">
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(4.0 & up)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rating" id="rating3" checked>
+                  <label class="form-check-label" for="rating3">
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(3.0 & up)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="mb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rating" id="rating2">
+                  <label class="form-check-label" for="rating2">
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(2.0 & up)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Listing -->
+        <div class="col-lg-9">
+          <!-- Sorting and View Options -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <span class="me-2">Showing 1-12 of 183 books</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <label for="sort" class="me-2">Sort by:</label>
+              <select class="form-select form-select-sm me-3" id="sort" style="width: auto;">
+                <option selected>Popularity</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Newest Arrivals</option>
+                <option>Rating</option>
+              </select>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-dark active">
+                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                </button>
+                <button type="button" class="btn btn-outline-dark">
+                  <i class="bi bi-list"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="row g-4" id="products-container">
+            <!-- Book 1 -->
+            <div class="col-6 col-md-4" data-category="fiction" data-price="24.99" data-rating="4.5" data-date="2024-12-15">
+              <div class="card h-100 product-card">
+                <div class="badge bg-danger position-absolute top-0 end-0 m-2">New</div>
+                <a href="product.html?id=1">
+                  <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Bound in Mystery</h5>
+                  <p class="text-muted mb-1">Jane Austen</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">24.99 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-half text-warning"></i>
+                      <span class="ms-1">(4.5)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=1" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="1">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 2 -->
+            <div class="col-6 col-md-4" data-category="poetry" data-price="19.95" data-rating="4.0" data-date="2024-10-05">
+              <div class="card h-100 product-card">
+                <div class="badge bg-success position-absolute top-0 end-0 m-2">Bestseller</div>
+                <a href="product.html?id=2">
+                  <img src="https://images.unsplash.com/photo-1629992101753-56d196c8aabb" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Pages of Reflection</h5>
+                  <p class="text-muted mb-1">Robert Frost</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">19.95 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(4.0)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=2" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="2">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 3 -->
+            <div class="col-6 col-md-4" data-category="fiction" data-price="22.50" data-rating="4.9" data-date="2024-08-20">
+              <div class="card h-100 product-card">
+                <a href="product.html?id=3">
+                  <img src="https://images.unsplash.com/photo-1633477189729-9290b3261d0a" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Desert Chronicles</h5>
+                  <p class="text-muted mb-1">Michael Stone</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">22.50 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <span class="ms-1">(4.9)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=3" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="3">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 4 -->
+            <div class="col-6 col-md-4" data-category="non-fiction" data-price="18.75" data-rating="3.5" data-date="2023-11-15">
+              <div class="card h-100 product-card">
+                <a href="product.html?id=4">
+                  <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Ancient Knowledge</h5>
+                  <p class="text-muted mb-1">Sarah Johnson</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">18.75 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-half text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(3.5)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=4" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="4">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 5 -->
+            <div class="col-6 col-md-4" data-category="romance" data-price="21.25" data-rating="4.5" data-date="2024-01-10">
+              <div class="card h-100 product-card">
+                <div class="badge bg-info position-absolute top-0 end-0 m-2">Featured</div>
+                <a href="product.html?id=5">
+                  <img src="https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Whispers of the Heart</h5>
+                  <p class="text-muted mb-1">Emily Watson</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">21.25 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-half text-warning"></i>
+                      <span class="ms-1">(4.5)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=5" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="5">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 6 -->
+            <div class="col-6 col-md-4" data-category="mystery" data-price="26.99" data-rating="4.0" data-date="2024-03-22">
+              <div class="card h-100 product-card">
+                <a href="product.html?id=6">
+                  <img src="https://images.unsplash.com/photo-1610882648335-ced8fc8fa6b6" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">The Dark Library</h5>
+                  <p class="text-muted mb-1">Stephen King</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">26.99 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(4.0)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=6" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="6">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 7 -->
+            <div class="col-6 col-md-4" data-category="non-fiction" data-price="32.50" data-rating="4.7" data-date="2024-02-15">
+              <div class="card h-100 product-card">
+                <a href="product.html?id=7">
+                  <img src="https://images.unsplash.com/photo-1603203040743-9911d6ee2920" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Urban Architecture</h5>
+                  <p class="text-muted mb-1">Robert Greene</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">32.50 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-half text-warning"></i>
+                      <span class="ms-1">(4.7)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=7" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="7">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 8 -->
+            <div class="col-6 col-md-4" data-category="romance" data-price="17.99" data-rating="4.2" data-date="2023-09-30">
+              <div class="card h-100 product-card">
+                <a href="product.html?id=8">
+                  <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Letters Unwritten</h5>
+                  <p class="text-muted mb-1">Laura Chen</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold">17.99 D</span>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star text-warning"></i>
+                      <span class="ms-1">(4.2)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=8" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="8">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 9 -->
+            <div class="col-6 col-md-4" data-category="scifi" data-price="15.95" data-rating="4.6" data-date="2024-01-05">
+              <div class="card h-100 product-card">
+                <div class="badge bg-warning position-absolute top-0 end-0 m-2">Sale</div>
+                <a href="product.html?id=9">
+                  <img src="https://images.unsplash.com/photo-1629992101753-56d196c8aabb" class="card-img-top" alt="Book cover">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">Forgotten Realms</h5>
+                  <p class="text-muted mb-1">George R.R. Martin</p>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                      <span class="fw-bold">15.95 D</span>
+                      <span class="text-decoration-line-through text-muted ms-2">24.95 D</span>
+                    </div>
+                    <div class="rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-half text-warning"></i>
+                      <span class="ms-1">(4.6)</span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="product.html?id=9" class="btn btn-sm btn-outline-primary">View Details</a>
+                    <button class="btn btn-sm btn-primary add-to-cart" data-id="9">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="text-center">
+            <h3>Subscribe to Our Newsletter</h3>
+            <p class="text-muted">Get updates on new releases, exclusive offers, and reading recommendations.</p>
+            <form class="row g-3 justify-content-center">
+              <div class="col-md-8">
+                <input type="email" class="form-control" placeholder="Your email address">
+              </div>
+              <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-light py-4">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h5>BookHaven</h5>
+          <p>Your destination for books of all genres. Discover new worlds, learn new skills, and escape into imagination.</p>
+        </div>
+        <div class="col-md-2">
+          <h5>Shop</h5>
+          <ul class="list-unstyled">
+            <li><a href="shop.html?category=fiction" class="text-decoration-none text-dark">Fiction</a></li>
+            <li><a href="shop.html?category=non-fiction" class="text-decoration-none text-dark">Non-Fiction</a></li>
+            <li><a href="shop.html?category=mystery" class="text-decoration-none text-dark">Mystery</a></li>
+            <li><a href="shop.html?category=scifi" class="text-decoration-none text-dark">Sci-Fi & Fantasy</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2">
+          <h5>Company</h5>
+          <ul class="list-unstyled">
+            <li><a href="about.html" class="text-decoration-none text-dark">About Us</a></li>
+            <li><a href="contact.html" class="text-decoration-none text-dark">Contact</a></li>
+            <li><a href="#" class="text-decoration-none text-dark">Privacy Policy</a></li>
+            <li><a href="#" class="text-decoration-none text-dark">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h5>Contact Us</h5>
+          <address class="mb-0">
+            <p class="mb-1"><i class="bi bi-geo-alt me-1"></i> 123 Book Street, Reading, RG1 2FG</p>
+            <p class="mb-1"><i class="bi bi-telephone me-1"></i> (555) 123-4567</p>
+            <p class="mb-1"><i class="bi bi-envelope me-1"></i> info@bookhaven.com</p>
+          </address>
+          <div class="d-flex gap-2 mt-3">
+            <a href="#" class="btn btn-sm btn-outline-dark"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-dark"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-dark"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-dark"><i class="bi bi-pinterest"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 BookHaven. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/shop.js"></script>
+</body>
+</html>

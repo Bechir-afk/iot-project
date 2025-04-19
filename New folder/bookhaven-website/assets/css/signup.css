@@ -1,0 +1,61 @@
+/**
+ * BookHaven - Signup Page Styles
+ */
+
+/* Separator for the "OR" divider */
+.separator {
+    position: relative;
+  }
+  
+  /* Password strength meter styling */
+  .password-strength-meter {
+    height: 4px;
+    margin-top: 8px;
+    gap: 4px;
+  }
+  
+  .strength-section {
+    height: 4px;
+    flex: 1;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Benefits list icon sizing */
+  .benefits-list i {
+    font-size: 1.2rem;
+  }
+  
+  /* Password requirements list styling */
+  .password-requirements ul {
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Success message styling */
+  .signup-success-icon {
+    font-size: 5rem;
+  }
+  
+  /* Enhanced form focus states */
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  /* Animation for validation feedback */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .invalid-feedback {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .social-signup .btn {
+      font-size: 0.9rem;
+    }
+  }

@@ -1,0 +1,60 @@
+/**
+ * BookHaven - Login Page Styles
+ */
+
+/* Card styling */
+.login-card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+  }
+  
+  /* Form elements */
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  /* Social login buttons */
+  .social-login-btn {
+    transition: all 0.2s ease;
+  }
+  
+  .social-login-btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .google-btn {
+    background-color: white;
+    color: #444;
+  }
+  
+  .google-btn:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .facebook-btn {
+    background-color: #1877f2;
+    color: white;
+  }
+  
+  .facebook-btn:hover {
+    background-color: #166fe5;
+  }
+  
+  /* Fade in animation for error messages */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  #login-error {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .card-body {
+      padding: 1.5rem !important;
+    }
+  }
